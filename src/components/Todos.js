@@ -1,5 +1,5 @@
 import List from '@material-ui/core/List';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Input from './input/Input';
 import Filters from './filters/Filters'
 import Li from './listitem/Li'
@@ -41,6 +41,7 @@ const handleSubmit = ((e) => {
           filter = {filter}
           setFilteredTodos = {setFilteredTodos}
           setFilter = {setFilter}
+          filteredTodos = {filteredTodos}
         />
 
         <List>
@@ -52,7 +53,7 @@ const handleSubmit = ((e) => {
               todoDate = {todo.date}
               setTodos = {setTodos}
               todos = {todos}
-   
+              key = {todo.id}
             />
         ))}
         </List>

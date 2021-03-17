@@ -7,7 +7,6 @@ import ListItem from '@material-ui/core/ListItem';
 import "./listitem.css";
 
 export default function Li(props) {
-
   const handleDeleteOne = (e, index) => {
     let newTodos = [...props.todos]
     newTodos = newTodos.filter(item => item.id !== index)
@@ -25,7 +24,7 @@ export default function Li(props) {
     <ListItem
               className="listitem"
               divider 
-              key={props.todoId}>
+    >
                 <Checkbox
                    checked = {props.todoChecked}
                    onChange={(e) => handleCheckBoxChecked(e, props.todoId)}/>
@@ -33,6 +32,7 @@ export default function Li(props) {
                 <ListItemText 
                   primary ={props.todoMessage}
                 />
+                
                 <p>{props.todoDate}</p>
                  <ListItemIcon>
                     <ClearIcon
@@ -40,6 +40,7 @@ export default function Li(props) {
                       onClick={(e) => handleDeleteOne(e, props.todoId)}
                     />
                   </ListItemIcon>
+                  
     </ListItem>
     );
   }
