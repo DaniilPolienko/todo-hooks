@@ -1,5 +1,5 @@
 import List from '@material-ui/core/List';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input from './input/Input';
 import Filters from './filters/Filters'
 import Li from './listitem/Li'
@@ -12,7 +12,6 @@ const [todos, setTodos]=useState([])
 const [filteredTodos, setFilteredTodos] = useState([])
 const [todoId, setTodoId]=useState(0)
 const [filter, setFilter]=useState("all")
-const [numberOfPages, setNumberOfPages] = useState(1)
 
 
 const handleSubmit = ((e) => {
@@ -28,6 +27,8 @@ const handleSubmit = ((e) => {
     const savedTodos = newTodos.filter(item => item.checked === false)
     setTodos([...savedTodos])
   }
+
+
 
 
   return (
@@ -50,8 +51,10 @@ const handleSubmit = ((e) => {
               todoId = {todo.id}
               todoChecked = {todo.checked}
               todoMessage = {todo.message}
+              filteredTodos = {filteredTodos}
               todoDate = {todo.date}
               setTodos = {setTodos}
+              setFilteredTodos = {setFilteredTodos}
               todos = {todos}
               key = {todo.id}
             />
@@ -63,8 +66,11 @@ const handleSubmit = ((e) => {
           >clear completed</p>
 
         <Pages
-       
-          numberOfPages = {numberOfPages}
+          filteredTodos = {filteredTodos}
+          setFilteredTodos = {setFilteredTodos}
+          todos = {todos}
+          setTodos = {setTodos}
+    
         />
     </>
     );
