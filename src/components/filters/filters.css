@@ -1,0 +1,24 @@
+.filters {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    
+}
+
+.buttons {
+    display: flex;
+
+}
+.arrows {
+    display: flex;
+    align-items: center;
+}
+
+.datesort {
+    margin-right: 15px;
+}
+
+.arrow:hover {
+    background-color: #eceff1;
+    cursor: pointer;
+}
