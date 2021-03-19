@@ -12,6 +12,9 @@ const [todos, setTodos]=useState([])
 const [filteredTodos, setFilteredTodos] = useState([])
 const [todoId, setTodoId]=useState(0)
 const [filter, setFilter]=useState("all")
+const [idToBeEdited, setIdToBeEdited] = useState(-1)
+const [editedMessage, setEditedMessage] = useState("")
+const [currentPage, setCurrentPage] = useState(1)
 
 
 const handleSubmit = ((e) => {
@@ -28,6 +31,131 @@ const handleSubmit = ((e) => {
     setTodos([...savedTodos])
   }
 
+  const filterTodos = (filterType, page) => {
+    const newTodos = [...todos]
+    switch(filterType) {
+      case "all":
+        setFilteredTodos([...todos.slice((page - 1) * 5, (page - 1) * 5 + 5)])
+        setFilter("all")
+
+        break;
+      case "active":
+        setFilteredTodos(newTodos.filter(item => item.checked === false).slice((page - 1) * 5, (page - 1) * 5 + 5))
+        setFilter("active")
+        filterTodos()
+
+        break;
+      case "done":
+        setFilteredTodos(newTodos.filter(item=> item.checked === true).slice((page - 1) * 5, (page - 1) * 5 + 5))
+        setFilter("done")
+        filterTodos()
+
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleDeleteOne = (e, index) => {
+    let newTodos = [...todos]
+    newTodos = newTodos.filter(item => item.id !== index)
+    setTodos ([...newTodos])
+   }
+
+
+   const handleCheckBoxChecked = (e, index) => {
+    const newTodos = [...todos]
+    const currentTodo = newTodos.find(el => el.id === index)
+    currentTodo.checked = e.target.checked
+    setTodos([...newTodos])
+    console.log(todos)
+  }
+
+  
+
+  const handleEditInputChange = (e) => {
+    if (e.key === "Enter") {
+      if(e.target.value.trim() === "") {
+        alert("Поле пусто") 
+      }
+      else {
+        e.preventDefault();
+        handleSubmitEdited();
+      }
+    }
+    else {
+      if (e.key === "Escape") {
+        setIdToBeEdited(-1)
+      }
+      else {
+      setEditedMessage(e.target.value)
+      }
+    }
+  }
+
+  const handleSubmitEdited = () => {
+    const newTodos = [...todos]
+    const currentTodo = newTodos.find(el => el.id === idToBeEdited)
+    currentTodo.message = editedMessage
+    currentTodo.date = new Date().toLocaleString()
+    setTodos([...newTodos])
+    setIdToBeEdited(-1)
+  }
+
+  const changePage = (e, page) => {
+    setCurrentPage(page)
+  }
+
+  const countPages = (filterType) => {
+      switch (filterType) {
+        case "all":
+          return Math.ceil(todos.length / 5)
+        case "active":
+          return Math.ceil(todos.filter(item => item.checked === false).length / 5)
+        case "done":
+          return Math.ceil(todos.filter(item => item.checked === true).length / 5)
+        default:
+          break;
+      }
+  }
+
+// useEffect(()=> {
+//     console.log(currentPage)
+//   //  setFilteredTodos(todos.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5))
+//     setFilteredTodos(todos.filter((item, index) => index >= (currentPage) * 5 && index <= (currentPage -1)* 5 +  5 ))
+  
+// },[currentPage])
+
+// useEffect(()=> {
+//   console.log(currentPage)
+//   setFilteredTodos(todos.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5))
+//   setFilteredTodos(todos.filter((item, index) => index >= (currentPage) * 5 && index <= (currentPage -1)* 5 +  5 ))
+
+// },[todos.length])
+
+// useEffect(()=> {
+//   if (filteredTodos.length > 5) {
+//  setCurrentPage(currentPage)
+//   }
+// },[todos.length])
+
+  
+useEffect(() => {
+    filterTodos(filter, currentPage);
+   }, [todos])
+
+   useEffect(() => {
+    filterTodos(filter, currentPage);
+   }, [currentPage])
+
+   useEffect(() => {
+    filterTodos(filter, currentPage);
+   }, [filter])
+
+   useEffect(() => {
+    countPages(filter)
+   }, [filter])
+
 
 
 
@@ -38,24 +166,24 @@ const handleSubmit = ((e) => {
           setInput = {setInput}
        />
         <Filters
-          todos = {todos}
           filter = {filter}
           setFilteredTodos = {setFilteredTodos}
-          setFilter = {setFilter}
           filteredTodos = {filteredTodos}
+          filterTodos = {filterTodos}
         />
 
         <List>
         {filteredTodos.map((todo) => (
             <Li
               todoId = {todo.id}
+              handleCheckBoxChecked = {handleCheckBoxChecked}
               todoChecked = {todo.checked}
+              idToBeEdited = {idToBeEdited}
               todoMessage = {todo.message}
-              filteredTodos = {filteredTodos}
+              handleEditInputChange = {handleEditInputChange}
+              setIdToBeEdited = {setIdToBeEdited}
               todoDate = {todo.date}
-              setTodos = {setTodos}
-              setFilteredTodos = {setFilteredTodos}
-              todos = {todos}
+              handleDeleteOne = {handleDeleteOne}
               key = {todo.id}
             />
         ))}
@@ -66,11 +194,9 @@ const handleSubmit = ((e) => {
           >clear completed</p>
 
         <Pages
-          filteredTodos = {filteredTodos}
-          setFilteredTodos = {setFilteredTodos}
-          todos = {todos}
-          setTodos = {setTodos}
-    
+   
+          changePage = {changePage}
+          countPages = {countPages(filter)}
         />
     </>
     );
