@@ -16,14 +16,13 @@ const [filter, setFilter]=useState("all")
 const [idToBeEdited, setIdToBeEdited] = useState(-1)
 const [editedMessage, setEditedMessage] = useState("")
 const [currentPage, setCurrentPage] = useState(1)
-const [postBody, setPostBody] = useState({})
-const [iterator, setIterator] = useState(0)
+
 
 const handleSubmit = ((e) => {
   
-    setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
-    setTodoId(todoId + 1)
-    setFilter("all")
+   // setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
+   // setTodoId(todoId + 1)
+   // setFilter("all")
     
     async function makePostRequest() {
       console.log("hi");
@@ -33,17 +32,18 @@ const handleSubmit = ((e) => {
      console.log(data);
  }
     makePostRequest();
+    console.log(todos)
     
 });
 
   const handleClearCompleted = () => {
-    let newTodos = [...todos]
+    const newTodos = [...todos]
     const savedTodos = newTodos.filter(item => item.checked === false)
     setTodos([...savedTodos])
   }
 
   const filterTodos = (filterType) => {
-    const newTodos = [...todos]
+    let newTodos = [...todos]
     switch(filterType) {
       case "all":
         setFilteredTodos([...todos.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5)])
@@ -68,9 +68,18 @@ const handleSubmit = ((e) => {
   };
 
   const handleDeleteOne = (e, index) => {
-    let newTodos = [...todos]
-    newTodos = newTodos.filter(item => item.id !== index)
-    setTodos ([...newTodos])
+    // let newTodos = [...todos]
+    // newTodos = newTodos.filter(item => item.id !== index)
+    // setTodos ([...newTodos])
+    const itemToBeDeleted = todos.find(el => el.id === index)
+
+
+    async function makeDeleteRequest() {
+      const element = await axios.delete('https://todo-api-learning.herokuapp.com/v1/task/5/' + itemToBeDeleted.uuid);
+      //setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt})))
+      console.log(element)
+    }
+      makeDeleteRequest()
    }
 
 
@@ -146,31 +155,19 @@ useEffect(() => {
 
    useEffect(() => {
     countPages(filter)
+    console.log(todos)
    }, [filter])
 
-
-  //  useEffect(() => {
-  //   const str = postBody;
-  //   axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', str)
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  //  }, [todos.length])
-
-  // useEffect(()=> {
-  //   axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', {
-  //     name: "hello",
-  //     done: false
-  //   })
-  //   .then((response) => {
-  //     console.log(response);
-  //   }, (error) => {
-  //     console.log(error);
-  //   });
-  // }, [todos.length])
+    useEffect(() => {
+   
+     async function makeGetRequest() {
+       const {data} = await axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5');
+       setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
+//       console.log(data)
+       
+     }
+       makeGetRequest()
+    }, [], [todos.length])
 
 
 
