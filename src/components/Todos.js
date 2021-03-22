@@ -4,6 +4,7 @@ import Input from './input/Input';
 import Filters from './filters/Filters'
 import Li from './listitem/Li'
 import Pages from './pagination/Pages'
+import axios from 'axios'
 
 
 export default function Todos(props) {
@@ -15,14 +16,18 @@ const [filter, setFilter]=useState("all")
 const [idToBeEdited, setIdToBeEdited] = useState(-1)
 const [editedMessage, setEditedMessage] = useState("")
 const [currentPage, setCurrentPage] = useState(1)
-
+const [postBody, setPostBody] = useState({})
+const [iterator, setIterator] = useState(0)
 
 const handleSubmit = ((e) => {
   
     setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
-    setFilteredTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
     setTodoId(todoId + 1)
     setFilter("all")
+    setPostBody({
+      name: todos.message,
+      checked: false
+    })
 });
 
   const handleClearCompleted = () => {
@@ -119,25 +124,6 @@ const handleSubmit = ((e) => {
       }
   }
 
-// useEffect(()=> {
-//     console.log(currentPage)
-//   //  setFilteredTodos(todos.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5))
-//     setFilteredTodos(todos.filter((item, index) => index >= (currentPage) * 5 && index <= (currentPage -1)* 5 +  5 ))
-  
-// },[currentPage])
-
-// useEffect(()=> {
-//   console.log(currentPage)
-//   setFilteredTodos(todos.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5))
-//   setFilteredTodos(todos.filter((item, index) => index >= (currentPage) * 5 && index <= (currentPage -1)* 5 +  5 ))
-
-// },[todos.length])
-
-// useEffect(()=> {
-//   if (filteredTodos.length > 5) {
-//  setCurrentPage(currentPage)
-//   }
-// },[todos.length])
 
   
 useEffect(() => {
@@ -157,6 +143,41 @@ useEffect(() => {
    }, [filter])
 
 
+  //  useEffect(() => {
+  //   const str = postBody;
+  //   axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', str)
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  //  }, [todos.length])
+
+  // useEffect(()=> {
+  //   axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', {
+  //     name: "hello",
+  //     done: false
+  //   })
+  //   .then((response) => {
+  //     console.log(response);
+  //   }, (error) => {
+  //     console.log(error);
+  //   });
+  // }, [todos.length])
+
+
+   async function makeGetRequest() {
+      console.log("hi");
+     const payload = { name: 'J6ohn Doe', done: true };
+     const res = await axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', payload);
+     const data = res.data;
+     console.log(data);
+ }
+
+ useEffect(()=> {
+   makeGetRequest()
+ }, [])
 
 
   return (
