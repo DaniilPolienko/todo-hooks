@@ -24,10 +24,16 @@ const handleSubmit = ((e) => {
     setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
     setTodoId(todoId + 1)
     setFilter("all")
-    setPostBody({
-      name: todos.message,
-      checked: false
-    })
+    
+    async function makePostRequest() {
+      console.log("hi");
+     const task = { name: input, done: false };
+     const res = await axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', task);
+     const data = res.data;
+     console.log(data);
+ }
+    makePostRequest();
+    
 });
 
   const handleClearCompleted = () => {
@@ -167,17 +173,6 @@ useEffect(() => {
   // }, [todos.length])
 
 
-   async function makeGetRequest() {
-      console.log("hi");
-     const payload = { name: 'J6ohn Doe', done: true };
-     const res = await axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', payload);
-     const data = res.data;
-     console.log(data);
- }
-
- useEffect(()=> {
-   makeGetRequest()
- }, [])
 
 
   return (
