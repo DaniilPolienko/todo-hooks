@@ -20,7 +20,7 @@ const [currentPage, setCurrentPage] = useState(1)
 
 const handleSubmit = ((e) => {
   
-   // setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
+    //setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
    // setTodoId(todoId + 1)
    // setFilter("all")
     
@@ -30,8 +30,10 @@ const handleSubmit = ((e) => {
      const res = await axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', task);
      const data = res.data;
      console.log(data);
+     makeGetRequest()
  }
     makePostRequest();
+    
     console.log(todos)
     
 });
@@ -76,8 +78,8 @@ const handleSubmit = ((e) => {
 
     async function makeDeleteRequest() {
       const element = await axios.delete('https://todo-api-learning.herokuapp.com/v1/task/5/' + itemToBeDeleted.uuid);
-      //setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt})))
       console.log(element)
+      makeGetRequest()
     }
       makeDeleteRequest()
    }
@@ -87,6 +89,8 @@ const handleSubmit = ((e) => {
     const newTodos = [...todos]
     const currentTodo = newTodos.find(el => el.id === index)
     currentTodo.checked = e.target.checked
+
+    makePatchCheckRequest(currentTodo, e.target.checked)
     setTodos([...newTodos])
     console.log(todos)
   }
@@ -118,6 +122,8 @@ const handleSubmit = ((e) => {
     const currentTodo = newTodos.find(el => el.id === idToBeEdited)
     currentTodo.message = editedMessage
     currentTodo.date = new Date().toLocaleString()
+
+    makePatchEditRequest(currentTodo, editedMessage, "name")
     setTodos([...newTodos])
     setIdToBeEdited(-1)
   }
@@ -139,6 +145,26 @@ const handleSubmit = ((e) => {
       }
   }
 
+  async function makeGetRequest() {
+    const {data} = await axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5');
+    setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
+  }
+
+  async function makePatchCheckRequest(item, state) {
+  await axios.patch('https://todo-api-learning.herokuapp.com/v1/task/5/' + item.uuid, 
+	{ 
+		done: state
+	}, 
+);
+  }
+
+  async function makePatchEditRequest(item, state) {
+    await axios.patch('https://todo-api-learning.herokuapp.com/v1/task/5/' + item.uuid, 
+    { 
+      name: state
+    }, 
+  );
+    }
 
   
 useEffect(() => {
@@ -159,17 +185,10 @@ useEffect(() => {
    }, [filter])
 
     useEffect(() => {
-   
-     async function makeGetRequest() {
-       const {data} = await axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5');
-       setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
-//       console.log(data)
-       
-     }
-       makeGetRequest()
-    }, [], [todos.length])
+     makeGetRequest()
+    }, [])
 
-
+    
 
 
   return (
