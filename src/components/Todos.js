@@ -146,7 +146,7 @@ const handleSubmit = ((e) => {
   }
 
   async function makeGetRequest() {
-    const {data} = await axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5');
+    const {data} = await axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc');
     setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
   }
 
