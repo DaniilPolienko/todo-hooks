@@ -4,6 +4,8 @@ import Input from './input/Input';
 import Filters from './filters/Filters'
 import Li from './listitem/Li'
 import Pages from './pagination/Pages'
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 import axios from 'axios'
 
 
@@ -16,6 +18,8 @@ const [filter, setFilter]=useState("all")
 const [idToBeEdited, setIdToBeEdited] = useState(-1)
 const [editedMessage, setEditedMessage] = useState("")
 const [currentPage, setCurrentPage] = useState(1)
+const [open, setOpen] = useState(false);
+const [error, setError] = useState("")
 
 
 const handleSubmit = ((e) => {
@@ -25,12 +29,19 @@ const handleSubmit = ((e) => {
    // setFilter("all")
     
     async function makePostRequest() {
+      try {
       console.log("hi");
      const task = { name: input, done: false };
      const res = await axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', task);
      const data = res.data;
      console.log(data);
      makeGetRequest()
+     setOpen(false)
+      }
+      catch(err) {
+        setOpen(true)
+        setError(err.toString())
+      }
  }
     makePostRequest();
     
@@ -77,11 +88,19 @@ const handleSubmit = ((e) => {
 
 
     async function makeDeleteRequest() {
+    try {
       const element = await axios.delete('https://todo-api-learning.herokuapp.com/v1/task/5/' + itemToBeDeleted.uuid);
       console.log(element)
       makeGetRequest()
     }
+    catch(err) {
+      setOpen(true)
+      setError(err.toString())
+    }
+    }
       makeDeleteRequest()
+
+
    }
 
 
@@ -129,7 +148,7 @@ const handleSubmit = ((e) => {
   }
 
   const changePage = (e, page) => {
-    setCurrentPage(page)
+      setCurrentPage(page)
   }
 
   const countPages = (filterType) => {
@@ -146,24 +165,43 @@ const handleSubmit = ((e) => {
   }
 
   async function makeGetRequest() {
+    try {
     const {data} = await axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc');
     setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
+    }
+    catch(err) {
+      setOpen(true)
+      setError(err.toString())
+    }
   }
 
+
   async function makePatchCheckRequest(item, state) {
+    try {
   await axios.patch('https://todo-api-learning.herokuapp.com/v1/task/5/' + item.uuid, 
 	{ 
 		done: state
 	}, 
 );
+    }
+    catch(err) {
+      setOpen(true)
+      setError(err.toString())
+    }
   }
 
   async function makePatchEditRequest(item, state) {
+    try {
     await axios.patch('https://todo-api-learning.herokuapp.com/v1/task/5/' + item.uuid, 
     { 
       name: state
     }, 
   );
+    }
+    catch(err) {
+      setOpen(true)
+      setError(err.toString())
+    }
     }
 
   
@@ -230,6 +268,13 @@ useEffect(() => {
           changePage = {changePage}
           countPages = {countPages(filter)}
         />
+
+      <Snackbar open={open} autoHideDuration={5000} onClose = {()=>setOpen(false)}>
+        <Alert  onClose = {()=> setOpen(false)} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
+
     </>
     );
 

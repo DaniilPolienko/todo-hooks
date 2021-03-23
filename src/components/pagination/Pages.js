@@ -8,7 +8,6 @@ export default function Pages(props) {
     
     return (
         <Pagination
-         
             onChange = {props.changePage}
             className = "pages"
             count={props.countPages} 
