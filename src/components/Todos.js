@@ -20,7 +20,7 @@ const [currentPage, setCurrentPage] = useState(1)
 const handleSubmit = ((e) => {
   
     setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
-    setFilteredTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
+ // setFilteredTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
     setTodoId(todoId + 1)
     setFilter("all")
 });
