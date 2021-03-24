@@ -8,7 +8,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import axios from 'axios'
 
-
 export default function Todos(props) {
 const [input, setInput]=useState("")
 const [todos, setTodos]=useState([])
@@ -20,33 +19,10 @@ const [editedMessage, setEditedMessage] = useState("")
 const [currentPage, setCurrentPage] = useState(1)
 const [open, setOpen] = useState(false);
 const [error, setError] = useState("")
-
+const [order, setOrder] = useState("asc")
 
 const handleSubmit = ((e) => {
-  
-    //setTodos([...todos, {id: todoId, message: input, checked: false, date: new Date().toLocaleString()}]);
-   // setTodoId(todoId + 1)
-   // setFilter("all")
-    
-    async function makePostRequest() {
-      try {
-      console.log("hi");
-     const task = { name: input, done: false };
-     const res = await axios.post('https://todo-api-learning.herokuapp.com/v1/task/5', task);
-     const data = res.data;
-     console.log(data);
-     getTasks()
-     setOpen(false)
-      }
-      catch(err) {
-        setOpen(true)
-        setError(err.toString())
-      }
- }
     makePostRequest();
-    
-    console.log(todos)
-    
 });
 
   const handleClearCompleted = () => {
@@ -81,26 +57,8 @@ const handleSubmit = ((e) => {
   };
 
   const handleDeleteOne = (e, index) => {
-    // let newTodos = [...todos]
-    // newTodos = newTodos.filter(item => item.id !== index)
-    // setTodos ([...newTodos])
     const itemToBeDeleted = todos.find(el => el.id === index)
-
-
-    async function makeDeleteRequest() {
-    try {
-      const element = await axios.delete('https://todo-api-learning.herokuapp.com/v1/task/5/' + itemToBeDeleted.uuid);
-      console.log(element)
-      getTasks()
-    }
-    catch(err) {
-      setOpen(true)
-      setError(err.toString())
-    }
-    }
-      makeDeleteRequest()
-
-
+      makeDeleteRequest(itemToBeDeleted)
    }
 
 
@@ -111,7 +69,6 @@ const handleSubmit = ((e) => {
 
     checkTask(currentTodo, e.target.checked)
     setTodos([...newTodos])
-    console.log(todos)
   }
 
   
@@ -140,10 +97,9 @@ const handleSubmit = ((e) => {
     const newTodos = [...todos]
     const currentTodo = newTodos.find(el => el.id === idToBeEdited)
     currentTodo.message = editedMessage
-    currentTodo.date = new Date().toLocaleString()
+
 
     editTask(currentTodo, editedMessage, "name")
-    setTodos([...newTodos])
     setIdToBeEdited(-1)
   }
 
@@ -164,9 +120,9 @@ const handleSubmit = ((e) => {
       }
   }
 
-  async function getTasks() {
+  async function getTasks(order) {
     try {
-    const {data} = await axios.get('https://todo-api-learning.herokuapp.com/v1/tasks/5?order=asc');
+    const {data} = await axios.get(process.env.REACT_APP_API + '/v1/tasks/5?order=' + order);
     setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
     }
     catch(err) {
@@ -175,10 +131,35 @@ const handleSubmit = ((e) => {
     }
   }
 
+    async function makePostRequest() {
+        try {
+            const task = { name: input, done: false };
+            const res = await axios.post(process.env.REACT_APP_API + '/v1/task/5', task);
+            const data = res.data;
+            getTasks(order)
+            setOpen(false)
+        }
+        catch(err) {
+            setOpen(true)
+            setError(err.toString())
+        }
+    }
+
+    async function makeDeleteRequest(itemToBeDeleted) {
+        try {
+            const element = await axios.delete(process.env.REACT_APP_API + '/v1/task/5/' + itemToBeDeleted.uuid);
+            console.log(element)
+            getTasks(order)
+        }
+        catch(err) {
+            setOpen(true)
+            setError(err.toString())
+        }
+    }
 
   async function checkTask(task, state) {
     try {
-  await axios.patch('https://todo-api-learning.herokuapp.com/v1/task/5/' + task.uuid, 
+  await axios.patch(process.env.REACT_APP_API + '/v1/task/5/' + task.uuid,
 	{ 
 		done: state
 	}, 
@@ -192,7 +173,7 @@ const handleSubmit = ((e) => {
 
   async function editTask(task, state) {
     try {
-    await axios.patch('https://todo-api-learning.herokuapp.com/v1/task/5/' + task.uuid, 
+    await axios.patch(process.env.REACT_APP_API + '/v1/task/5/' + task.uuid,
     { 
       name: state
     }, 
@@ -203,6 +184,8 @@ const handleSubmit = ((e) => {
       setError(err.toString())
     }
     }
+
+
 
   
 useEffect(() => {
@@ -223,8 +206,14 @@ useEffect(() => {
    }, [filter])
 
     useEffect(() => {
-     getTasks()
+        getTasks(order)
+    }, [order])
+
+    useEffect(() => {
+     getTasks(order)
     }, [])
+
+
 
     
 
@@ -240,6 +229,7 @@ useEffect(() => {
           setFilteredTodos = {setFilteredTodos}
           filteredTodos = {filteredTodos}
           filterTodos = {filterTodos}
+          setOrder = {setOrder}
         />
 
         <List>

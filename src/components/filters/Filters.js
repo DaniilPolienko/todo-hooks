@@ -8,17 +8,7 @@ import "./filters.css";
 export default function Filters(props) {
    
 
-      function datesUp(a,b) {
-        if (a.date > b.date) return -1;
-        if (a.date === b.date) return 0;
-        if (a.date < b.date) return 1;
-      }
 
-      function datesDown(a,b) {
-        if (a.date > b.date) return 1;
-        if (a.date === b.date) return 0;
-        if (a.date < b.date) return -1;
-      }
       
     return (
         <div className ="filters">
@@ -39,10 +29,10 @@ export default function Filters(props) {
           <div className = "arrows">
             <p className = "datesort">Sort by date</p>
             <ArrowUpwardIcon
-              onClick = {()=> props.setFilteredTodos([...props.filteredTodos.sort(datesUp)])}
+              onClick = {() => props.setOrder("desc")}
               className ="arrow"/>
             <ArrowDownwardIcon
-              onClick = {()=> props.setFilteredTodos([...props.filteredTodos.sort(datesDown)])}
+                onClick = {() => props.setOrder("asc")}
               className ="arrow"/>
           </div>
         </div>
