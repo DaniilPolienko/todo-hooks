@@ -119,26 +119,6 @@ const handleSubmit = ((e) => {
       }
   }
 
-// useEffect(()=> {
-//     console.log(currentPage)
-//   //  setFilteredTodos(todos.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5))
-//     setFilteredTodos(todos.filter((item, index) => index >= (currentPage) * 5 && index <= (currentPage -1)* 5 +  5 ))
-  
-// },[currentPage])
-
-// useEffect(()=> {
-//   console.log(currentPage)
-//   setFilteredTodos(todos.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5))
-//   setFilteredTodos(todos.filter((item, index) => index >= (currentPage) * 5 && index <= (currentPage -1)* 5 +  5 ))
-
-// },[todos.length])
-
-// useEffect(()=> {
-//   if (filteredTodos.length > 5) {
-//  setCurrentPage(currentPage)
-//   }
-// },[todos.length])
-
   
 useEffect(() => {
     filterTodos(filter, currentPage);
@@ -167,8 +147,8 @@ useEffect(() => {
        />
         <Filters
           filter = {filter}
-          setFilteredTodos = {setFilteredTodos}
-          filteredTodos = {filteredTodos}
+          todos = {todos}
+          setTodos = {setTodos}
           filterTodos = {filterTodos}
         />
 

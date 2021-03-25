@@ -39,10 +39,10 @@ export default function Filters(props) {
           <div className = "arrows">
             <p className = "datesort">Sort by date</p>
             <ArrowUpwardIcon
-              onClick = {()=> props.setFilteredTodos([...props.filteredTodos.sort(datesUp)])}
+              onClick = {()=> props.setTodos([...props.todos.sort(datesUp)])}
               className ="arrow"/>
             <ArrowDownwardIcon
-              onClick = {()=> props.setFilteredTodos([...props.filteredTodos.sort(datesDown)])}
+              onClick = {()=> props.setTodos([...props.todos.sort(datesDown)])}
               className ="arrow"/>
           </div>
         </div>
