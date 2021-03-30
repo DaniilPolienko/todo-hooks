@@ -121,7 +121,7 @@ const handleSubmit = ((e) => {
 
   async function getTasks(order) {
     try {
-    const {data} = await axios.get(process.env.REACT_APP_API + '/items');
+    const {data} = await axios.get(process.env.REACT_APP_API + '/items?sort=' + order );
     setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
     }
     catch(err) {
