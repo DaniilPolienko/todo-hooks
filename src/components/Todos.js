@@ -24,12 +24,6 @@ const handleSubmit = ((e) => {
     makePostRequest();
 });
 
-  const handleClearCompleted = () => {
-    const newTodos = [...todos]
-    const savedTodos = newTodos.filter(item => item.checked === false)
-    setTodos([...savedTodos])
-  }
-
   const filterTodos = (filterType) => {
     let newTodos = [...todos]
     switch(filterType) {
