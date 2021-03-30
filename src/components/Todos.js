@@ -121,7 +121,7 @@ const handleSubmit = ((e) => {
 
   async function getTasks(order) {
     try {
-    const {data} = await axios.get(process.env.REACT_APP_API + '/v1/tasks/5?order=' + order);
+    const {data} = await axios.get(process.env.REACT_APP_API + '/items');
     setTodos(data.map((item, index) => ( {id: index, message: item.name, checked: item.done, date: item.createdAt, uuid: item.uuid})))
     }
     catch(err) {
@@ -133,7 +133,7 @@ const handleSubmit = ((e) => {
     async function makePostRequest() {
         try {
             const task = { name: input, done: false };
-            await axios.post(process.env.REACT_APP_API + '/v1/task/5', task);
+            await axios.post(process.env.REACT_APP_API + '/item', task);
             getTasks(order)
             setOpen(false)
         }
@@ -145,7 +145,7 @@ const handleSubmit = ((e) => {
 
     async function makeDeleteRequest(itemToBeDeleted) {
         try {
-            await axios.delete(process.env.REACT_APP_API + '/v1/task/5/' + itemToBeDeleted.uuid);
+            await axios.delete(process.env.REACT_APP_API + '/item/' + itemToBeDeleted.uuid);
     
             getTasks(order)
         }
@@ -157,7 +157,7 @@ const handleSubmit = ((e) => {
 
   async function checkTask(task, state) {
     try {
-  await axios.patch(process.env.REACT_APP_API + '/v1/task/5/' + task.uuid,
+  await axios.patch(process.env.REACT_APP_API + '/item/' + task.uuid,
 	{ 
 		done: state
 	}, 
@@ -171,7 +171,7 @@ const handleSubmit = ((e) => {
 
   async function editTask(task, state) {
     try {
-    await axios.patch(process.env.REACT_APP_API + '/v1/task/5/' + task.uuid,
+    await axios.patch(process.env.REACT_APP_API + '/item/' + task.uuid,
     { 
       name: state
     }, 
