@@ -12,7 +12,6 @@ export default function Todos(props) {
 const [input, setInput]=useState("")
 const [todos, setTodos]=useState([])
 const [filteredTodos, setFilteredTodos] = useState([])
-const [todoId, setTodoId]=useState(0)
 const [filter, setFilter]=useState("all")
 const [idToBeEdited, setIdToBeEdited] = useState(-1)
 const [editedMessage, setEditedMessage] = useState("")
@@ -134,8 +133,7 @@ const handleSubmit = ((e) => {
     async function makePostRequest() {
         try {
             const task = { name: input, done: false };
-            const res = await axios.post(process.env.REACT_APP_API + '/v1/task/5', task);
-            const data = res.data;
+            await axios.post(process.env.REACT_APP_API + '/v1/task/5', task);
             getTasks(order)
             setOpen(false)
         }
@@ -147,8 +145,8 @@ const handleSubmit = ((e) => {
 
     async function makeDeleteRequest(itemToBeDeleted) {
         try {
-            const element = await axios.delete(process.env.REACT_APP_API + '/v1/task/5/' + itemToBeDeleted.uuid);
-            console.log(element)
+            await axios.delete(process.env.REACT_APP_API + '/v1/task/5/' + itemToBeDeleted.uuid);
+    
             getTasks(order)
         }
         catch(err) {
