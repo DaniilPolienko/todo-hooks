@@ -246,10 +246,7 @@ useEffect(() => {
             />
         ))}
         </List>
-        <p 
-          className="clear"
-          onClick={handleClearCompleted}
-          >clear completed</p>
+        
 
         <Pages
    
