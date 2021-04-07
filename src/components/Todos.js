@@ -7,6 +7,8 @@ import Pages from "./pagination/Pages";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
+import Link from "@material-ui/core/Link";
+import "./Styles.css";
 
 export default function Todos(props) {
   const [input, setInput] = useState("");
@@ -154,6 +156,9 @@ export default function Todos(props) {
 
   return (
     <>
+      <Link className="logout" href="/auth" variant="body2">
+        {"Log out"}
+      </Link>
       <Input handleSubmit={handleSubmit} setInput={setInput} />
       <Filters
         filter={filter}
