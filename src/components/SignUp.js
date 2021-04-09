@@ -39,15 +39,13 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
-    e.preventDefault();
     setInput(e.target.value);
   };
 
   async function postUser(e) {
-    console.log("gello");
     e.preventDefault();
     try {
-      await axios({
+      const user = await axios({
         method: "post",
         url: "/signup",
         data: {
@@ -57,6 +55,7 @@ export default function SignUp() {
           password: password,
         },
       });
+      localStorage.setItem("token", user.data.token);
     } catch (err) {
       console.log(err);
     }
