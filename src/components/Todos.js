@@ -148,10 +148,6 @@ export default function Todos(props) {
 
   useEffect(() => {
     getTasks(currentPage);
-  }, []);
-
-  useEffect(() => {
-    getTasks(currentPage);
   }, [currentPage, filter, order]);
 
   return (

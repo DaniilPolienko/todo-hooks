@@ -7,6 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Redirect } from "react-router-dom";
+import axios from "axios";
+require("dotenv").config();
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,12 +37,31 @@ export default function SignUp() {
   const [secondName, setSecondName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const API_URL = process.env.REACT_APP_API;
+  axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
+    e.preventDefault();
     setInput(e.target.value);
-    console.log(firstName);
-    console.log(secondName);
   };
+
+  async function postUser(e) {
+    console.log("gello");
+    e.preventDefault();
+    try {
+      await axios({
+        method: "post",
+        url: "/signup",
+        data: {
+          firstName: firstName,
+          lastName: secondName,
+          email: email,
+          password: password,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   if (redirect) {
     return <Redirect to="/" />;
@@ -49,11 +70,7 @@ export default function SignUp() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <form
-          className={classes.form}
-          noValidate
-          onSubmit={() => setRedirect(true)}
-        >
+        <form className={classes.form} noValidate onSubmit={(e) => postUser(e)}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
