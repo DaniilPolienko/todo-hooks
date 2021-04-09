@@ -8,6 +8,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 require("dotenv").config();
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +39,8 @@ export default function SignUp() {
   const [secondName, setSecondName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState();
+  const [open, setOpen] = useState(false);
 
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
@@ -68,7 +72,8 @@ export default function SignUp() {
     },
     (error) => {
       if (error) {
-        console.log(error.response.data.error || error.response.data.errors);
+        setError(error.response.data.error || error.response.data.errors);
+        setOpen(true);
       }
       return Promise.reject(error);
     }
@@ -152,6 +157,15 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={5000}
+        onClose={() => setOpen(false)}
+      >
+        <Alert onClose={() => setOpen(false)} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
