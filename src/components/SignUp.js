@@ -34,14 +34,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
-  const [redirect, setRedirect] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState();
+  const [redirect, setRedirect] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const jwt = require("jsonwebtoken");
+  const [success, setSuccess] = useState(false);
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
     setInput(e.target.value);
@@ -61,9 +62,14 @@ export default function SignUp() {
         },
       });
       localStorage.setItem("token", user.data.token);
+      setSuccess(true);
     } catch (err) {
       console.log(err);
     }
+  }
+
+  if (success) {
+    return <Redirect to="/" />;
   }
 
   axios.interceptors.response.use(
@@ -78,10 +84,6 @@ export default function SignUp() {
       return Promise.reject(error);
     }
   );
-
-  if (redirect) {
-    return <Redirect to="/" />;
-  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

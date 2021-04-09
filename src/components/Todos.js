@@ -152,7 +152,12 @@ export default function Todos(props) {
 
   return (
     <>
-      <Link className="logout" href="/auth" variant="body2">
+      <Link
+        className="logout"
+        href="/auth"
+        variant="body2"
+        onClick={() => localStorage.removeItem("token")}
+      >
         {"Log out"}
       </Link>
       <Input handleSubmit={handleSubmit} setInput={setInput} />

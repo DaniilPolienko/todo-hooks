@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -35,11 +35,23 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
-
+  const jwt = require("jsonwebtoken");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
     setInput(e.target.value);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if (token) {
+      const decoded = jwt.decode(token, { complete: true });
+      const expireTime = decoded.payload.exp;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime >= expireTime) return <Redirect to="/auth" />;
+      setRedirect(true);
+    }
+  }, []);
 
   async function loginUser(e) {
     e.preventDefault();
@@ -54,9 +66,13 @@ export default function SignIn() {
       });
 
       localStorage.setItem("token", user.data.token);
+      setRedirect(true);
     } catch (err) {
       console.log(err);
     }
+  }
+  if (redirect) {
+    return <Redirect to="/" />;
   }
 
   axios.interceptors.response.use(
@@ -75,6 +91,7 @@ export default function SignIn() {
   if (redirect) {
     return <Redirect to="/" />;
   }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
