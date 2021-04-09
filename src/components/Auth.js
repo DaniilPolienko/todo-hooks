@@ -9,6 +9,8 @@ import Container from "@material-ui/core/Container";
 import { useState } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,6 +33,9 @@ export default function SignIn() {
   const [redirect, setRedirect] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState();
+  const [open, setOpen] = useState(false);
+
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
     setInput(e.target.value);
@@ -60,7 +65,8 @@ export default function SignIn() {
     },
     (error) => {
       if (error) {
-        console.log(error.response.data.error || error.response.data.errors);
+        setError(error.response.data.error || error.response.data.errors);
+        setOpen(true);
       }
       return Promise.reject(error);
     }
@@ -120,6 +126,15 @@ export default function SignIn() {
           </Grid>
         </form>
       </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={5000}
+        onClose={() => setOpen(false)}
+      >
+        <Alert onClose={() => setOpen(false)} severity="error">
+          {error}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

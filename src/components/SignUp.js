@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -37,6 +37,7 @@ export default function SignUp() {
   const [secondName, setSecondName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
     setInput(e.target.value);
@@ -60,6 +61,18 @@ export default function SignUp() {
       console.log(err);
     }
   }
+
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error) {
+        console.log(error.response.data.error || error.response.data.errors);
+      }
+      return Promise.reject(error);
+    }
+  );
 
   if (redirect) {
     return <Redirect to="/" />;
