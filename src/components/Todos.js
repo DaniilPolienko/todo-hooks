@@ -9,6 +9,7 @@ import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
 import Link from "@material-ui/core/Link";
 import "./Styles.css";
+import { Redirect } from "react-router";
 
 export default function Todos(props) {
   const [input, setInput] = useState("");
@@ -19,8 +20,10 @@ export default function Todos(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
+  const [redirect, setRedirect] = useState(false);
   const [order, setOrder] = useState("asc");
   const [count, setCount] = useState(1);
+  const jwt = require("jsonwebtoken");
   const API_URL_GET = process.env.REACT_APP_API_GET;
   const handleSubmit = (e) => {
     makePostRequest();
@@ -145,6 +148,16 @@ export default function Todos(props) {
       setError(err.toString());
     }
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    const decoded = jwt.decode(token, { complete: true });
+    const expireTime = decoded.payload.exp;
+    console.log(expireTime);
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (currentTime >= expireTime) return <Redirect to="/auth" />;
+  }, []);
 
   useEffect(() => {
     getTasks(currentPage);

@@ -39,9 +39,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState();
-  const [redirect, setRedirect] = useState(false);
   const [open, setOpen] = useState(false);
-  const jwt = require("jsonwebtoken");
   const [success, setSuccess] = useState(false);
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
