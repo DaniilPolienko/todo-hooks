@@ -37,7 +37,6 @@ export default function SignUp() {
   const [secondName, setSecondName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const API_URL = process.env.REACT_APP_API;
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
     e.preventDefault();
