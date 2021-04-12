@@ -20,10 +20,12 @@ export default function Todos(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
-  const [redirect, setRedirect] = useState(false);
   const [order, setOrder] = useState("asc");
   const [count, setCount] = useState(1);
+  const [redirect, setRedirect] = useState(false);
   const jwt = require("jsonwebtoken");
+  const token = localStorage.getItem("token");
+  const decoded = jwt.decode(token, { complete: true });
   const API_URL_GET = process.env.REACT_APP_API_GET;
   const handleSubmit = (e) => {
     makePostRequest();
@@ -103,7 +105,7 @@ export default function Todos(props) {
 
   async function makePostRequest() {
     try {
-      const task = { message: input };
+      const task = { message: input, token: token, uuid: decoded.payload.id };
       await axios.post(process.env.REACT_APP_API + "/item", task);
       getTasks(currentPage);
       setOpen(false);
@@ -149,15 +151,18 @@ export default function Todos(props) {
     }
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    console.log(token);
-    const decoded = jwt.decode(token, { complete: true });
-    const expireTime = decoded.payload.exp;
-    console.log(expireTime);
-    const currentTime = Math.floor(Date.now() / 1000);
-    if (currentTime >= expireTime) return <Redirect to="/auth" />;
-  }, []);
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error) {
+        setError(error.response.data.error || error.response.data.errors);
+        setOpen(true);
+      }
+      return Promise.reject(error);
+    }
+  );
 
   useEffect(() => {
     getTasks(currentPage);
