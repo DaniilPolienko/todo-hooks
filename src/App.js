@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Todos from "./components/Todos.js";
 import Auth from "./components/Auth.js";
 import SignUp from "./components/SignUp.js";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import "./App.css";
 import "./components/Styles.css";
+const jwt = require("jsonwebtoken");
 
 function App(props) {
+  const token = localStorage.getItem("token");
+  const decoded = jwt.decode(token, { complete: true });
+  const expireTime = decoded.payload.exp;
+  const currentTime = Math.floor(Date.now() / 1000);
+
   return (
     <Router>
+      {currentTime > expireTime ? <Redirect to="/auth" /> : <div></div>}
       <section className="section">
         <Switch>
           <Route exact path="/">
@@ -28,5 +40,4 @@ function App(props) {
     </Router>
   );
 }
-
 export default App;
