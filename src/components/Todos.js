@@ -134,6 +134,9 @@ export default function Todos(props) {
       if (error) {
         setError(error.response.data.error || error.response.data.errors);
         setOpen(true);
+        if (error.response.data.error === "Token is expired") {
+          setRedirect(true);
+        }
       }
       return Promise.reject(error);
     }
@@ -143,6 +146,9 @@ export default function Todos(props) {
     getTasks(currentPage);
   }, [currentPage, filter, order]);
 
+  if (redirect) {
+    return <Redirect to="/auth" />;
+  }
   return (
     <>
       <Link

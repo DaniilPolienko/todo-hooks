@@ -48,8 +48,7 @@ export default function SignIn() {
       const decoded = jwt.decode(token, { complete: true });
       const expireTime = decoded.payload.exp;
       const currentTime = Math.floor(Date.now() / 1000);
-      if (currentTime >= expireTime) return <Redirect to="/auth" />;
-      setRedirect(true);
+      if (currentTime < expireTime) setRedirect(true);
     }
   }, []);
 
