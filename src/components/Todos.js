@@ -77,78 +77,53 @@ export default function Todos(props) {
   };
 
   async function getTasks() {
-    try {
-      const { data } = await axios.get(API_URL_GET, {
-        params: {
-          page: currentPage,
-          filter: filter,
-          sort: order,
-        },
-      });
-      console.log(data);
-      setTodos(
-        data.rows.map((item, index) => ({
-          id: index,
-          message: item.message,
-          checked: item.done,
-          date: item.createdAt,
-          uuid: item.id,
-        }))
-      );
-      console.log(data.count);
-      setCount(data.count);
-    } catch (err) {
-      setOpen(true);
-      setError(err.toString());
-    }
+    const { data } = await axios.get(API_URL_GET, {
+      params: {
+        page: currentPage,
+        filter: filter,
+        sort: order,
+      },
+    });
+    console.log(data);
+    setTodos(
+      data.rows.map((item, index) => ({
+        id: index,
+        message: item.message,
+        checked: item.done,
+        date: item.createdAt,
+        uuid: item.id,
+      }))
+    );
+    console.log(data.count);
+    setCount(data.count);
   }
 
   async function makePostRequest() {
-    try {
-      const task = { message: input, token: token, uuid: decoded.payload.id };
-      await axios.post(process.env.REACT_APP_API + "/item", task);
-      getTasks(currentPage);
-      setOpen(false);
-    } catch (err) {
-      setOpen(true);
-      setError(err.toString());
-    }
+    const task = { message: input, token: token, uuid: decoded.payload.id };
+    await axios.post(process.env.REACT_APP_API + "/item", task);
+    getTasks(currentPage);
+    setOpen(false);
   }
 
   async function makeDeleteRequest(itemToBeDeleted) {
-    try {
-      await axios.delete(
-        process.env.REACT_APP_API + "/item/" + itemToBeDeleted.uuid
-      );
+    await axios.delete(
+      process.env.REACT_APP_API + "/item/" + itemToBeDeleted.uuid
+    );
 
-      getTasks(currentPage);
-    } catch (err) {
-      setOpen(true);
-      setError(err.toString());
-    }
+    getTasks(currentPage);
   }
 
   async function checkTask(task, state) {
-    try {
-      await axios.patch(process.env.REACT_APP_API + "/item/" + task.uuid, {
-        done: state,
-      });
-      getTasks(currentPage);
-    } catch (err) {
-      setOpen(true);
-      setError(err.toString());
-    }
+    await axios.patch(process.env.REACT_APP_API + "/item/" + task.uuid, {
+      done: state,
+    });
+    getTasks(currentPage);
   }
 
   async function editTask(task, state) {
-    try {
-      await axios.patch(process.env.REACT_APP_API + "/item/" + task.uuid, {
-        message: state,
-      });
-    } catch (err) {
-      setOpen(true);
-      setError(err.toString());
-    }
+    await axios.patch(process.env.REACT_APP_API + "/item/" + task.uuid, {
+      message: state,
+    });
   }
 
   axios.interceptors.response.use(
