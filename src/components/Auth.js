@@ -81,7 +81,7 @@ export default function SignIn() {
     },
     (error) => {
       if (error) {
-        setError(error.preview.data.error || error.response.data.errors);
+        setError(error.response.data.error || error.response.data.errors);
         setOpen(true);
       }
       return Promise.reject(error);
