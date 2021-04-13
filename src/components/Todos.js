@@ -143,9 +143,21 @@ export default function Todos(props) {
   }
 
   async function editTask(task, state) {
-    await axios.patch(process.env.REACT_APP_API + "/item/" + task.uuid, {
-      message: state,
-    });
+    try {
+      await axios({
+        method: "patch",
+        url: "/item",
+        params: {
+          id: task.id,
+          message: state,
+        },
+        headers: {
+          Authorization: token,
+        },
+      });
+    } catch (error) {
+      getTasks(currentPage);
+    }
   }
 
   axios.interceptors.response.use(
