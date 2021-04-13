@@ -113,12 +113,6 @@ export default function Todos(props) {
     getTasks(currentPage);
     setOpen(false);
   }
-
-  // async function makeDeleteRequest(itemToBeDeleted) {
-  //   await axios.delete(
-  //     process.env.REACT_APP_API + "/item/" + itemToBeDeleted.uuid
-  //   );
-
   async function makeDeleteRequest(itemToBeDeleted) {
     await axios({
       method: "delete",
@@ -134,8 +128,16 @@ export default function Todos(props) {
   }
 
   async function checkTask(task, state) {
-    await axios.patch(process.env.REACT_APP_API + "/item/" + task.uuid, {
-      done: state,
+    await axios({
+      method: "patch",
+      url: "/item",
+      params: {
+        id: task.id,
+        done: state,
+      },
+      headers: {
+        Authorization: token,
+      },
     });
     getTasks(currentPage);
   }
