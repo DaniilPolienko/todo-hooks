@@ -10,17 +10,10 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import "./components/Styles.css";
-const jwt = require("jsonwebtoken");
 
 function App(props) {
-  const token = localStorage.getItem("token");
-  const decoded = jwt.decode(token, { complete: true });
-  const expireTime = decoded.payload.exp;
-  const currentTime = Math.floor(Date.now() / 1000);
-
   return (
     <Router>
-      {currentTime > expireTime ? <Redirect to="/auth" /> : <div></div>}
       <section className="section">
         <Switch>
           <Route exact path="/">

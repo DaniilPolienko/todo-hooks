@@ -84,8 +84,10 @@ export default function Todos(props) {
         filter: filter,
         sort: order,
       },
+      headers: {
+        Authorization: token,
+      },
     });
-    console.log(data);
     setTodos(
       data.rows.map((item, index) => ({
         message: item.message,
@@ -168,7 +170,10 @@ export default function Todos(props) {
       if (error) {
         setError(error.response.data.error || error.response.data.errors);
         setOpen(true);
-        if (error.response.data.error === "Token is expired") {
+        if (
+          error.response.data.error === "Token is expired" ||
+          error.response.data.error === "Access Denied"
+        ) {
           setRedirect(true);
         }
       }
