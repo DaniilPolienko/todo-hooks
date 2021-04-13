@@ -169,7 +169,7 @@ export default function Todos(props) {
         setError(error.response.data.error || error.response.data.errors);
         setOpen(true);
         if (
-          error.response.data.error === "Token is expired" ||
+          error.response.data.error === "jwt expired" ||
           error.response.data.error === "Access Denied" ||
           error.response.data.error === "Invalid token"
         ) {
