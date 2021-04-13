@@ -43,9 +43,8 @@ export default function SignIn() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token);
-    if (token) {
-      const decoded = jwt.decode(token, { complete: true });
+    const decoded = jwt.decode(token, { complete: true });
+    if (token & decoded) {
       const expireTime = decoded.payload.exp;
       const currentTime = Math.floor(Date.now() / 1000);
       if (currentTime < expireTime) setRedirect(true);
@@ -66,9 +65,7 @@ export default function SignIn() {
 
       localStorage.setItem("token", user.data.token);
       setRedirect(true);
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   }
   if (redirect) {
     return <Redirect to="/" />;

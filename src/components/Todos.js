@@ -23,9 +23,7 @@ export default function Todos(props) {
   const [order, setOrder] = useState("asc");
   const [count, setCount] = useState(1);
   const [redirect, setRedirect] = useState(false);
-  const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("token");
-  const decoded = jwt.decode(token, { complete: true });
   const API_URL_GET = process.env.REACT_APP_API_GET;
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleSubmit = (e) => {
@@ -172,7 +170,8 @@ export default function Todos(props) {
         setOpen(true);
         if (
           error.response.data.error === "Token is expired" ||
-          error.response.data.error === "Access Denied"
+          error.response.data.error === "Access Denied" ||
+          error.response.data.error === "Invalid token"
         ) {
           setRedirect(true);
         }
@@ -219,9 +218,11 @@ export default function Todos(props) {
           />
         ))}
       </List>
-
-      <Pages changePage={changePage} count={count} />
-
+      {(currentPage == 1) & (count < 6) ? (
+        <div></div>
+      ) : (
+        <Pages changePage={changePage} count={count} />
+      )}
       <Snackbar
         open={open}
         autoHideDuration={5000}
