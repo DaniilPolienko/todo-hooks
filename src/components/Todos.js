@@ -27,6 +27,7 @@ export default function Todos(props) {
   const token = localStorage.getItem("token");
   const decoded = jwt.decode(token, { complete: true });
   const API_URL_GET = process.env.REACT_APP_API_GET;
+  axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleSubmit = (e) => {
     makePostRequest();
   };
@@ -87,11 +88,11 @@ export default function Todos(props) {
     console.log(data);
     setTodos(
       data.rows.map((item, index) => ({
-        id: index,
         message: item.message,
         checked: item.done,
         date: item.createdAt,
-        uuid: item.id,
+        id: item.id,
+        uuid: item.uuid,
       }))
     );
     console.log(data.count);
@@ -99,17 +100,36 @@ export default function Todos(props) {
   }
 
   async function makePostRequest() {
-    const task = { message: input, token: token, uuid: decoded.payload.id };
-    await axios.post(process.env.REACT_APP_API + "/item", task);
+    await axios({
+      method: "post",
+      url: "/item",
+      data: {
+        message: input,
+      },
+      headers: {
+        Authorization: token,
+      },
+    });
     getTasks(currentPage);
     setOpen(false);
   }
 
-  async function makeDeleteRequest(itemToBeDeleted) {
-    await axios.delete(
-      process.env.REACT_APP_API + "/item/" + itemToBeDeleted.uuid
-    );
+  // async function makeDeleteRequest(itemToBeDeleted) {
+  //   await axios.delete(
+  //     process.env.REACT_APP_API + "/item/" + itemToBeDeleted.uuid
+  //   );
 
+  async function makeDeleteRequest(itemToBeDeleted) {
+    await axios({
+      method: "delete",
+      url: "/item",
+      params: {
+        id: itemToBeDeleted.id,
+      },
+      headers: {
+        Authorization: token,
+      },
+    });
     getTasks(currentPage);
   }
 
