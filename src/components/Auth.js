@@ -43,12 +43,11 @@ export default function SignIn() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const decoded = jwt.decode(token, { complete: true });
-    if (token & decoded) {
-      const expireTime = decoded.payload.exp;
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (currentTime < expireTime) setRedirect(true);
-    }
+    console.log(process.env.REACT_APP_SECRET);
+    try {
+      const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
+      if (payload) setRedirect(true);
+    } catch (error) {}
   }, []);
 
   async function loginUser(e) {
