@@ -7,33 +7,40 @@ import TextField from "@material-ui/core/TextField";
 
 import "./listitem.css";
 
-export default function Li(props) {
+export default function Li({
+  todo,
+  handleEditInputChange,
+  setIdToBeEdited,
+  handleDeleteOne,
+  handleCheckBoxChecked,
+  idToBeEdited,
+}) {
   return (
     <ListItem className="listitem" divider>
       <Checkbox
-        checked={props.todo.checked}
-        onChange={(e) => props.handleCheckBoxChecked(e, props.todo.id)}
+        checked={todo.checked}
+        onChange={(e) => handleCheckBoxChecked(e, todo.id)}
       />
 
-      {props.idToBeEdited === props.todo.id ? (
+      {idToBeEdited === todo.id ? (
         <TextField
-          label={props.todo.message}
-          onChange={props.handleEditInputChange}
-          onKeyDown={props.handleEditInputChange}
+          label={todo.message}
+          onChange={handleEditInputChange}
+          onKeyDown={handleEditInputChange}
           id="standard-basic"
         />
       ) : (
         <ListItemText
-          onDoubleClick={() => props.setIdToBeEdited(props.todo.id)}
-          primary={props.todo.message}
+          onDoubleClick={() => setIdToBeEdited(todo.id)}
+          primary={todo.message}
         />
       )}
 
-      <p>{props.todo.date}</p>
+      <p>{todo.date}</p>
       <ListItemIcon>
         <ClearIcon
           className="delete"
-          onClick={(e) => props.handleDeleteOne(e, props.todo.id)}
+          onClick={(e) => handleDeleteOne(e, todo.id)}
         />
       </ListItemIcon>
     </ListItem>

@@ -1,19 +1,19 @@
 import TextField from "@material-ui/core/TextField";
 import React from "react";
 
-export default function Input(props) {
+export default function Input({ handleSubmit, setInput }) {
   const handleInputChange = (e) => {
     if (e.key === "Enter") {
       if (e.target.value.trim() === "") {
         alert("Поле пусто");
       } else {
         e.preventDefault();
-        props.handleSubmit(e);
-        props.setInput("");
+        handleSubmit(e);
+        setInput("");
         e.target.value = "";
       }
     } else {
-      props.setInput(e.target.value);
+      setInput(e.target.value);
     }
   };
   return (

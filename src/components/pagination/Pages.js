@@ -2,12 +2,12 @@ import Pagination from "@material-ui/lab/Pagination";
 import React from "react";
 import "./pages.css";
 
-export default function Pages(props) {
+export default function Pages({ changePage, count }) {
   return (
     <Pagination
-      onChange={props.changePage}
+      onChange={changePage}
       className="pages"
-      count={Math.ceil(props.count / 5)}
+      count={Math.ceil(count / 5)}
       color="primary"
     />
   );

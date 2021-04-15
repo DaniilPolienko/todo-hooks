@@ -11,7 +11,7 @@ import Link from "@material-ui/core/Link";
 import "./Styles.css";
 import { Redirect } from "react-router";
 
-export default function Todos(props) {
+export default function Todos() {
   const [input, setInput] = useState("");
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState(null);

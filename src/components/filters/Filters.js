@@ -4,27 +4,27 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import "./filters.css";
 
-export default function Filters(props) {
+export default function Filters({ setFilter, setOrder, filter }) {
   return (
     <div className="filters">
       <div className="buttons">
         <Button
-          onClick={() => props.setFilter(null)}
-          variant={props.filter === null ? "outlined" : "text"}
+          onClick={() => setFilter(null)}
+          variant={filter === null ? "outlined" : "text"}
           color="primary"
         >
           All
         </Button>
         <Button
-          onClick={() => props.setFilter(false)}
-          variant={props.filter === false ? "outlined" : "text"}
+          onClick={() => setFilter(false)}
+          variant={filter === false ? "outlined" : "text"}
           color="primary"
         >
           Active
         </Button>
         <Button
-          onClick={() => props.setFilter(true)}
-          variant={props.filter === true ? "outlined" : "text"}
+          onClick={() => setFilter(true)}
+          variant={filter === true ? "outlined" : "text"}
           color="primary"
         >
           Done
@@ -32,14 +32,8 @@ export default function Filters(props) {
       </div>
       <div className="arrows">
         <p className="datesort">Sort by date</p>
-        <ArrowUpwardIcon
-          onClick={() => props.setOrder("desc")}
-          className="arrow"
-        />
-        <ArrowDownwardIcon
-          onClick={() => props.setOrder("asc")}
-          className="arrow"
-        />
+        <ArrowUpwardIcon onClick={() => setOrder("desc")} className="arrow" />
+        <ArrowDownwardIcon onClick={() => setOrder("asc")} className="arrow" />
       </div>
     </div>
   );
