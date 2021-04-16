@@ -43,6 +43,7 @@ export default function SignIn() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     try {
       const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
       if (payload) setRedirect(true);
@@ -68,7 +69,7 @@ export default function SignIn() {
     } catch (err) {}
   }
   if (redirect) {
-    return <Redirect to="/todo-hooks" />;
+    return <Redirect to="/todos" />;
   }
 
   axios.interceptors.response.use(
@@ -85,7 +86,7 @@ export default function SignIn() {
   );
 
   if (redirect) {
-    return <Redirect to="/todo-hooks" />;
+    return <Redirect to="/todos" />;
   }
 
   return (
