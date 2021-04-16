@@ -2,13 +2,18 @@ import React from "react";
 import Todos from "./components/Todos.js";
 import Auth from "./components/Auth.js";
 import SignUp from "./components/SignUp.js";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  HashRouter,
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
 import "./App.css";
 import "./components/Styles.css";
 
 function App(props) {
   return (
-    <Router basename="/todo-hooks">
+    <HashRouter basename="/todo-hooks">
       <Router>
         <section className="section">
           <Switch>
@@ -24,7 +29,7 @@ function App(props) {
           </Switch>
         </section>
       </Router>
-    </Router>
+    </HashRouter>
   );
 }
 export default App;
