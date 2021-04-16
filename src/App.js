@@ -8,22 +8,20 @@ import "./components/Styles.css";
 
 function App(props) {
   return (
-    <Router basename="/todo-hooks">
-      <Router>
-        <section className="section">
-          <Switch>
-            <Route exact path="/todo-hooks">
-              <Todos />
-            </Route>
-            <Route path="/auth">
-              <Auth />
-            </Route>
-            <Route path="/signup">
-              <SignUp />
-            </Route>
-          </Switch>
-        </section>
-      </Router>
+    <Router>
+      <section className="section">
+        <Switch>
+          <Route exact path="/todo-hooks">
+            <Todos />
+          </Route>
+          <Route path="/auth">
+            <Auth />
+          </Route>
+          <Route path="/signup">
+            <SignUp />
+          </Route>
+        </Switch>
+      </section>
     </Router>
   );
 }
