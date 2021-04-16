@@ -2,12 +2,7 @@ import React from "react";
 import Todos from "./components/Todos.js";
 import Auth from "./components/Auth.js";
 import SignUp from "./components/SignUp.js";
-import {
-  BrowserRouter,
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import "./components/Styles.css";
 

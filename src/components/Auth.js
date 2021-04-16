@@ -43,7 +43,6 @@ export default function SignIn() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(process.env.REACT_APP_SECRET);
     try {
       const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
       if (payload) setRedirect(true);

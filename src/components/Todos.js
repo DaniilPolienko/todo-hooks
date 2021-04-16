@@ -15,8 +15,6 @@ export default function Todos() {
   const [input, setInput] = useState("");
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState(null);
-  const [idToBeEdited, setIdToBeEdited] = useState(-1);
-  const [editedMessage, setEditedMessage] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
@@ -28,6 +26,8 @@ export default function Todos() {
   const token = localStorage.getItem("token");
   const API_URL_GET = process.env.REACT_APP_API_GET;
   axios.defaults.baseURL = process.env.REACT_APP_API;
+  axios.defaults.headers.common["Authorization"] = token;
+
   const handleSubmit = (e) => {
     makePostRequest();
   };
@@ -37,9 +37,6 @@ export default function Todos() {
       method: "delete",
       url: "/item",
       params: { id },
-      headers: {
-        Authorization: token,
-      },
     });
     getTasks(currentPage);
   };
@@ -73,9 +70,6 @@ export default function Todos() {
         filter: filter,
         sort: order,
       },
-      headers: {
-        Authorization: token,
-      },
     });
     setTodos(
       data.rows.map((item, index) => ({
@@ -86,7 +80,6 @@ export default function Todos() {
         uuid: item.uuid,
       }))
     );
-    console.log(data.count);
     setCount(data.count);
   }
 
@@ -96,9 +89,6 @@ export default function Todos() {
       url: "/item",
       data: {
         message: input,
-      },
-      headers: {
-        Authorization: token,
       },
     });
     getTasks(currentPage);
@@ -113,10 +103,8 @@ export default function Todos() {
         data: {
           task,
         },
-        headers: {
-          Authorization: token,
-        },
       });
+      getTasks(currentPage);
     } catch (error) {
       getTasks(currentPage);
     }
@@ -193,7 +181,7 @@ export default function Todos() {
           />
         ))}
       </List>
-      {(currentPage == 1) & (count < 6) ? (
+      {(currentPage === 1) & (count < 6) ? (
         <div></div>
       ) : (
         <Pages changePage={changePage} count={count} />

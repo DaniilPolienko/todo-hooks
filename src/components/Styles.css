@@ -1,29 +1,28 @@
 .section {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: 150px;
-    width: 500px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 150px;
+  width: 600px;
 }
 
 .clear {
-    color: gray;
+  color: gray;
 }
 .clear:hover {
-    text-decoration: underline;
-    cursor: pointer;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .delete:hover {
-    background-color: #eceff1;
-    cursor: pointer;
+  background-color: #eceff1;
+  cursor: pointer;
 }
 
 .logout {
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    bottom: 150px;
-    left: 700px;
-
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  bottom: 150px;
+  left: 700px;
 }

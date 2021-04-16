@@ -62,7 +62,8 @@ export default function SignUp() {
       localStorage.setItem("token", user.data.token);
       setSuccess(true);
     } catch (err) {
-      console.log(err);
+      setError(err);
+      setOpen(true);
     }
   }
 
