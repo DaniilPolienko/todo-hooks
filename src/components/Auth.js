@@ -88,8 +88,7 @@ export default function SignIn() {
 
   if (redirect) {
     return <Redirect to="/todo-hooks" />;
-  }
-  if (redirectToSignUp) {
+  } else if (redirectToSignUp) {
     return <Redirect to="/signup" />;
   }
 
