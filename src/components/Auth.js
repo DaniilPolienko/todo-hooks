@@ -47,7 +47,7 @@ export default function SignIn() {
       const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
       if (payload) setRedirect(true);
     } catch (error) {
-      return <Redirect to="/#/auth" />;
+      return <Redirect to="/auth" />;
     }
   }, []);
 
@@ -68,7 +68,7 @@ export default function SignIn() {
     } catch (err) {}
   }
   if (redirect) {
-    return <Redirect to="/#/todos" />;
+    return <Redirect to="/todo-hooks" />;
   }
 
   axios.interceptors.response.use(
@@ -85,7 +85,7 @@ export default function SignIn() {
   );
 
   if (redirect) {
-    return <Redirect to="/#/todos" />;
+    return <Redirect to="/todo-hooks" />;
   }
 
   return (
@@ -132,7 +132,7 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="/#/signup" variant="body2">
+              <Link href="/signup" variant="body2">
                 {"Sign Up"}
               </Link>
             </Grid>
