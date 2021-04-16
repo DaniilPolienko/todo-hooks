@@ -145,14 +145,14 @@ export default function Todos() {
   }, []);
 
   if (redirect) {
-    return <Redirect to="/auth" />;
+    return <Redirect to="/todo-hooks/auth" />;
   }
   return (
     <>
       <p className="logout">{name}</p>
       <Link
         className="logout"
-        href="/auth"
+        href="/todo-hooks/auth"
         variant="body2"
         onClick={() => localStorage.removeItem("token")}
       >
