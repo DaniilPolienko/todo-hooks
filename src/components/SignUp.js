@@ -155,7 +155,7 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Button onClick={() => setRedirectToSignIn(true)} variant="body2">
+              <Button onClick={() => setRedirectToSignIn(true)}>
                 Already have an account? Sign in
               </Button>
             </Grid>
