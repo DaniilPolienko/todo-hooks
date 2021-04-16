@@ -144,7 +144,7 @@ export default function Todos() {
   }, []);
 
   if (redirect) {
-    return <Redirect to="/auth" />;
+    return <Redirect to="/#/auth" />;
   }
   return (
     <>
