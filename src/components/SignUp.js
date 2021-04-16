@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -41,6 +40,8 @@ export default function SignUp() {
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [redirectToSignIn, setRedirectToSignIn] = useState(false);
+
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
     setInput(e.target.value);
@@ -69,6 +70,9 @@ export default function SignUp() {
 
   if (success) {
     return <Redirect to="/todo-hooks" />;
+  }
+  if (redirectToSignIn) {
+    return <Redirect to="/signin" />;
   }
 
   axios.interceptors.response.use(
@@ -151,9 +155,9 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/auth" variant="body2">
+              <Button onClick={() => setRedirectToSignIn(true)} variant="body2">
                 Already have an account? Sign in
-              </Link>
+              </Button>
             </Grid>
           </Grid>
         </form>

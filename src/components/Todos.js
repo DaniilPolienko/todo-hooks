@@ -7,7 +7,9 @@ import Pages from "./pagination/Pages";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
-import Link from "@material-ui/core/Link";
+
+import Button from "@material-ui/core/Button";
+
 import "./Styles.css";
 import { Redirect } from "react-router";
 
@@ -145,19 +147,19 @@ export default function Todos() {
   }, []);
 
   if (redirect) {
+    localStorage.removeItem("token");
     return <Redirect to="/auth" />;
   }
   return (
     <>
       <p className="logout">{name}</p>
-      <Link
+      <Button
         className="logout"
-        href="/auth"
+        onClick={() => setRedirect(true)}
         variant="body2"
-        onClick={() => localStorage.removeItem("token")}
       >
         {"Log out"}
-      </Link>
+      </Button>
       <Input
         handleSubmit={handleSubmit}
         setInput={setInput}
