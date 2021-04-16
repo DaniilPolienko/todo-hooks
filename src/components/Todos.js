@@ -121,7 +121,8 @@ export default function Todos() {
         if (
           error.response.data.error === "jwt expired" ||
           error.response.data.error === "jwt must be provided" ||
-          error.response.data.error === "Access Denied"
+          error.response.data.error === "Access Denied" ||
+          error.response.data.error === "jwt malformed"
         ) {
           setRedirect(true);
         }
