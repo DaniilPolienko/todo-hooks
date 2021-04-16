@@ -67,7 +67,7 @@ export default function SignUp() {
   }
 
   if (success) {
-    return <Redirect to="/" />;
+    return <Redirect to="/todos" />;
   }
 
   axios.interceptors.response.use(

@@ -47,7 +47,9 @@ export default function SignIn() {
     try {
       const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
       if (payload) setRedirect(true);
-    } catch (error) {}
+    } catch (error) {
+      return <Redirect to="/auth" />;
+    }
   }, []);
 
   async function loginUser(e) {
@@ -67,7 +69,7 @@ export default function SignIn() {
     } catch (err) {}
   }
   if (redirect) {
-    return <Redirect to="/" />;
+    return <Redirect to="/todos" />;
   }
 
   axios.interceptors.response.use(
@@ -84,7 +86,7 @@ export default function SignIn() {
   );
 
   if (redirect) {
-    return <Redirect to="/" />;
+    return <Redirect to="/todos" />;
   }
 
   return (

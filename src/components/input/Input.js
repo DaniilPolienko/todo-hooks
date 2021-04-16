@@ -1,11 +1,12 @@
 import TextField from "@material-ui/core/TextField";
 import React from "react";
 
-export default function Input({ handleSubmit, setInput }) {
+export default function Input({ handleSubmit, setInput, setError, setOpen }) {
   const handleInputChange = (e) => {
     if (e.key === "Enter") {
       if (e.target.value.trim() === "") {
-        alert("Поле пусто");
+        setError("Поле пусто");
+        setOpen(true);
       } else {
         e.preventDefault();
         handleSubmit(e);

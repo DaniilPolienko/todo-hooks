@@ -2,7 +2,12 @@ import React from "react";
 import Todos from "./components/Todos.js";
 import Auth from "./components/Auth.js";
 import SignUp from "./components/SignUp.js";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter,
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
 import "./App.css";
 import "./components/Styles.css";
 
@@ -11,13 +16,10 @@ function App(props) {
     <Router>
       <section className="section">
         <Switch>
-          <Route exact path="/">
+          <Route exact path="/todos">
             <Todos />
           </Route>
           <Route path="/auth">
-            <Auth />
-          </Route>
-          <Route path="/todo-hooks">
             <Auth />
           </Route>
           <Route path="/signup">

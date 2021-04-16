@@ -23,6 +23,8 @@ export default function Todos() {
   const [order, setOrder] = useState("asc");
   const [count, setCount] = useState(1);
   const [redirect, setRedirect] = useState(false);
+  const [name, setName] = useState("");
+  const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("token");
   const API_URL_GET = process.env.REACT_APP_API_GET;
   axios.defaults.baseURL = process.env.REACT_APP_API;
@@ -30,45 +32,34 @@ export default function Todos() {
     makePostRequest();
   };
 
-  const handleDeleteOne = (e, index) => {
-    const itemToBeDeleted = todos.find((el) => el.id === index);
-    console.log(itemToBeDeleted);
-    makeDeleteRequest(itemToBeDeleted);
+  const handleDelete = async (id) => {
+    await axios({
+      method: "delete",
+      url: "/item",
+      params: { id },
+      headers: {
+        Authorization: token,
+      },
+    });
+    getTasks(currentPage);
   };
 
-  const handleCheckBoxChecked = (e, index) => {
+  const handleCheckBoxChecked = (e, todo) => {
     const newTodos = [...todos];
-    const currentTodo = newTodos.find((el) => el.id === index);
+    const currentTodo = newTodos.find((el) => el.id === todo.id);
     currentTodo.checked = e.target.checked;
 
-    checkTask(currentTodo, e.target.checked);
+    editTask(todo);
     setTodos([...newTodos]);
   };
 
-  const handleEditInputChange = (e) => {
-    if (e.key === "Enter") {
-      if (e.target.value.trim() === "") {
-        alert("Поле пусто");
-      } else {
-        e.preventDefault();
-        handleSubmitEdited();
-      }
-    } else {
-      if (e.key === "Escape") {
-        setIdToBeEdited(-1);
-      } else {
-        setEditedMessage(e.target.value);
-      }
-    }
-  };
-
-  const handleSubmitEdited = () => {
+  const handleSubmitCard = (todo) => {
     const newTodos = [...todos];
-    const currentTodo = newTodos.find((el) => el.id === idToBeEdited);
-    currentTodo.message = editedMessage;
+    const currentTodo = newTodos.find((el) => el.id === todo.id);
+    currentTodo.message = todo.message;
 
-    editTask(currentTodo, editedMessage, "name");
-    setIdToBeEdited(-1);
+    editTask(todo);
+    setTodos([...newTodos]);
   };
 
   const changePage = (e, page) => {
@@ -113,43 +104,14 @@ export default function Todos() {
     getTasks(currentPage);
     setOpen(false);
   }
-  async function makeDeleteRequest(itemToBeDeleted) {
-    await axios({
-      method: "delete",
-      url: "/item",
-      params: {
-        id: itemToBeDeleted.id,
-      },
-      headers: {
-        Authorization: token,
-      },
-    });
-    getTasks(currentPage);
-  }
 
-  async function checkTask(task, state) {
-    await axios({
-      method: "patch",
-      url: "/item",
-      params: {
-        id: task.id,
-        done: state,
-      },
-      headers: {
-        Authorization: token,
-      },
-    });
-    getTasks(currentPage);
-  }
-
-  async function editTask(task, state) {
+  async function editTask(task) {
     try {
       await axios({
         method: "patch",
         url: "/item",
-        params: {
-          id: task.id,
-          message: state,
+        data: {
+          task,
         },
         headers: {
           Authorization: token,
@@ -184,11 +146,21 @@ export default function Todos() {
     getTasks(currentPage);
   }, [currentPage, filter, order]);
 
+  useEffect(() => {
+    try {
+      const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
+      setName(payload.firstName);
+    } catch (error) {
+      setRedirect(true);
+    }
+  }, []);
+
   if (redirect) {
     return <Redirect to="/auth" />;
   }
   return (
     <>
+      <p className="logout">{name}</p>
       <Link
         className="logout"
         href="/auth"
@@ -197,7 +169,12 @@ export default function Todos() {
       >
         {"Log out"}
       </Link>
-      <Input handleSubmit={handleSubmit} setInput={setInput} />
+      <Input
+        handleSubmit={handleSubmit}
+        setInput={setInput}
+        setError={setError}
+        setOpen={setOpen}
+      />
       <Filters
         filter={filter}
         setOrder={setOrder}
@@ -210,10 +187,8 @@ export default function Todos() {
           <Li
             todo={todo}
             handleCheckBoxChecked={handleCheckBoxChecked}
-            idToBeEdited={idToBeEdited}
-            handleEditInputChange={handleEditInputChange}
-            setIdToBeEdited={setIdToBeEdited}
-            handleDeleteOne={handleDeleteOne}
+            handleSubmitCard={handleSubmitCard}
+            handleDelete={handleDelete}
             key={todo.id}
           />
         ))}
