@@ -137,7 +137,7 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <button onClink={() => setRedirectToSignUp(true)} variant="body2">
+              <button onClink={() => setRedirectToSignUp(true)}>
                 {"Sign Up"}
               </button>
             </Grid>
