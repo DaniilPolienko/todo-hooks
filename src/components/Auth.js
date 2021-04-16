@@ -69,7 +69,7 @@ export default function SignIn() {
     } catch (err) {}
   }
   if (redirect) {
-    return <Redirect to="/todos" />;
+    return <Redirect to="/todo-hooks" />;
   }
 
   axios.interceptors.response.use(
@@ -86,7 +86,7 @@ export default function SignIn() {
   );
 
   if (redirect) {
-    return <Redirect to="/todos" />;
+    return <Redirect to="/todo-hooks" />;
   }
 
   return (
