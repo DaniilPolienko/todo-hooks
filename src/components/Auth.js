@@ -35,6 +35,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState();
   const [open, setOpen] = useState(false);
+  const [redirectToSignUp, setRedirectToSignUp] = useState(false);
   const jwt = require("jsonwebtoken");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e, setInput) => {
@@ -88,6 +89,9 @@ export default function SignIn() {
   if (redirect) {
     return <Redirect to="/todo-hooks" />;
   }
+  if (redirectToSignUp) {
+    return <Redirect to="/signup" />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -133,7 +137,7 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="/signup" variant="body2">
+              <Link onClink={() => setRedirectToSignUp(true)} variant="body2">
                 {"Sign Up"}
               </Link>
             </Grid>
