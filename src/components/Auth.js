@@ -88,7 +88,8 @@ export default function SignIn() {
 
   if (redirect) {
     return <Redirect to="/todo-hooks" />;
-  } else if (redirectToSignUp) {
+  }
+  if (redirectToSignUp) {
     return <Redirect to="/signup" />;
   }
 
@@ -136,9 +137,9 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <p onClink={() => setRedirectToSignUp(true)} variant="body2">
+              <button onClink={() => setRedirectToSignUp(true)} variant="body2">
                 {"Sign Up"}
-              </p>
+              </button>
             </Grid>
           </Grid>
         </form>
