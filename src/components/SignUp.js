@@ -72,7 +72,7 @@ export default function SignUp() {
     return <Redirect to="/todo-hooks" />;
   }
   if (redirectToSignIn) {
-    return <Redirect to="/signin" />;
+    return <Redirect to="/auth" />;
   }
 
   axios.interceptors.response.use(
