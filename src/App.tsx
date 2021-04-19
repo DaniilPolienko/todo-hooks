@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  HashRouter,
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
+import "./App.css";
+import Auth from "./components/Auth";
+import SignUp from "./components/Signup";
+import "./components/Styles.css";
+import Todos from "./components/Todos";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <HashRouter basename="/todo-hooks">
+      <Router>
+        <section className="section">
+          <Switch>
+            <Route exact path="/todo-hooks">
+              <Todos />
+            </Route>
+            <Route path="/auth">
+              <Auth />
+            </Route>
+            <Route path="/signup">
+              <SignUp />
+            </Route> 
+          </Switch>
+        </section>
+      </Router>
+    </HashRouter>
   );
 }
-
 export default App;

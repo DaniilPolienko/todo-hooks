@@ -1,0 +1,30 @@
+.section {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 150px;
+  width: 600px;
+}
+
+.clear {
+  color: gray;
+}
+.clear:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.delete:hover {
+  background-color: #eceff1;
+  cursor: pointer;
+}
+
+.logout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 150px;
+  position: relative;
+  bottom: 150px;
+  left: 1150px;
+}
