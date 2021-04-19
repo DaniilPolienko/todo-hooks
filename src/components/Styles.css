@@ -21,8 +21,10 @@
 
 .logout {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: center;
+  max-width: 150px;
   position: relative;
   bottom: 150px;
-  left: 700px;
+  left: 1150px;
 }

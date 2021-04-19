@@ -152,14 +152,12 @@ export default function Todos() {
   }
   return (
     <>
-      <p className="logout">{name}</p>
-      <Button
-        className="logout"
-        onClick={() => setRedirect(true)}
-        variant="body2"
-      >
-        {"Log out"}
-      </Button>
+      <div className="logout">
+        <p>{name}</p>
+        <Button onClick={() => setRedirect(true)} variant="body2">
+          {"Log out"}
+        </Button>
+      </div>
       <Input
         handleSubmit={handleSubmit}
         setInput={setInput}
