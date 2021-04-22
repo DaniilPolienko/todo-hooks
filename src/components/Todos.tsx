@@ -7,9 +7,10 @@ import Pages from "./pagination/Pages";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
-
+import { Dispatch, SetStateAction } from "react";
+import { useDispatch } from 'react-redux'
 import Button from "@material-ui/core/Button";
-
+import {getTodos} from '../redux/todoSlice'
 import "./Styles.css";
 import { Redirect } from "react-router";
 
@@ -37,7 +38,7 @@ export default function Todos() {
   const [count, setCount] = useState(1);
   const [redirect, setRedirect] = useState(false);
   const [name, setName] = useState("");
-
+  const dispatch = useDispatch()
   const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
@@ -101,7 +102,18 @@ export default function Todos() {
         uuid: item.uuid,
       }))
     );
+    dispatch(
+      getTodos(
+        data.rows.map((item : todoInterface) => ({
+        message: item.message,
+        done: item.done,
+        createdAt: item.createdAt,
+        id: item.id,
+        uuid: item.uuid,
+      })))
+    )
     setCount(data.count);
+
   }
 
   async function makePostRequest() {

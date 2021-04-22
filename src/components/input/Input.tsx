@@ -1,8 +1,8 @@
 import TextField from "@material-ui/core/TextField";
-import React from "react";
+import React, { useDebugValue } from "react";
 import { Dispatch, SetStateAction } from "react";
-
-
+import { useDispatch } from 'react-redux'
+import {addTodo} from '../../redux/todoSlice'
 interface Props { 
     handleSubmit: () => void
     setInput: Dispatch<SetStateAction<string>>
@@ -11,6 +11,9 @@ interface Props {
 
 }
 export default function Input({ handleSubmit, setInput, setError, setOpen } : Props) {
+
+  const dispatch = useDispatch()
+
   const handleInputChange = (e: any) => {
     if (e.key === "Enter") {
       if (e.target.value.trim() === "") {
@@ -19,6 +22,11 @@ export default function Input({ handleSubmit, setInput, setError, setOpen } : Pr
       } else {
         e.preventDefault();
         handleSubmit();
+        dispatch(
+          addTodo({
+            message: e.target.value
+          })
+        )
         setInput("");
         e.target.value = "";
       }

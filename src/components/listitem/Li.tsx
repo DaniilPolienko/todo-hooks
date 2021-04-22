@@ -7,6 +7,9 @@ import ListItem from "@material-ui/core/ListItem";
 import TextField from "@material-ui/core/TextField";
 import "./listitem.css";
 import { todoInterface } from "../Todos";
+import {useDispatch} from 'react-redux'
+import {toggleComplete} from '../../redux/todoSlice'
+import { compose } from "redux";
 
 
 interface Props { 
@@ -17,6 +20,7 @@ interface Props {
 }
 export default function Li({todo, handleSubmitCard, handleDelete, handleCheckBoxChecked}:Props) {
   const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useDispatch()
 
   const handleEditInputChange = (e: any) => {
     if (e.key === "Enter") {
@@ -31,6 +35,11 @@ export default function Li({todo, handleSubmitCard, handleDelete, handleCheckBox
     if (e.key === "Escape") setIsEditing(false);
   };
 
+  const handleCompleteClick = () => {
+    dispatch(
+      toggleComplete({id: todo.id, done: !todo.done})
+    )
+  }
   return (
     <ListItem className="listitem" divider>
       <Checkbox
@@ -46,7 +55,7 @@ export default function Li({todo, handleSubmitCard, handleDelete, handleCheckBox
                 autoFocus
                 onBlur={() => setIsEditing(false)}
                 label={todo.message}
-                onChange={(e) => handleEditInputChange(e)}
+                onChange={handleCompleteClick}
                 onKeyDown={(e) => handleEditInputChange(e)}
                 id="standard-basic"
             />
