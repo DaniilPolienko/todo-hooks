@@ -189,7 +189,7 @@ export default function Todos() {
           {(currentPage === 1) && (user.count < 6) ? (
             <div></div>
               ) : (
-          <Pages changePage={changePage} count={count} />
+          <Pages changePage={changePage} count={user.count} />
               )}
           </div>
           ) : (<h1>loading</h1>)}

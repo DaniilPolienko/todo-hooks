@@ -12,6 +12,7 @@ export function* handleGetUser(action) {
       action.order
     );
     const { data } = response;
+    console.log(response);
     console.log(data);
     yield put(setUser(data));
   } catch (error) {
