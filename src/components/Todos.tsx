@@ -7,12 +7,12 @@ import Pages from "./pagination/Pages";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
-import { Dispatch, SetStateAction } from "react";
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Button from "@material-ui/core/Button";
-import {getTodos} from '../redux/todoSlice'
 import "./Styles.css";
 import { Redirect } from "react-router";
+import { getUser, setUser } from "../redux/user";
+import type { RootState, AppDispatch } from '../redux/store'
 
 export interface todoInterface {
     message?: string,
@@ -38,12 +38,13 @@ export default function Todos() {
   const [count, setCount] = useState(1);
   const [redirect, setRedirect] = useState(false);
   const [name, setName] = useState("");
-  const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.user.user)
+  const dispatch = useDispatch();
   const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
-
+ 
  
   const handleSubmit = () => {
     makePostRequest();
@@ -55,7 +56,7 @@ export default function Todos() {
       url: "/item",
       params: { id },
     });
-    getTasks();
+ 
   };
 
   const handleCheckBoxChecked = (e:any, todo: todoInterface) => {
@@ -82,40 +83,6 @@ export default function Todos() {
   const changePage = (e:any, page: number) => {
     setCurrentPage(page);
   };
-
-  async function getTasks() {
-    const { data } = await axios({
-        method: "get",
-        url: "/items",
-        params: {
-            page: currentPage,
-            filter: filter,
-            sort: order,
-        },
-      });
-    setTodos(
-      data.rows.map((item : todoInterface) => ({
-        message: item.message,
-        done: item.done,
-        createdAt: item.createdAt,
-        id: item.id,
-        uuid: item.uuid,
-      }))
-    );
-    dispatch(
-      getTodos(
-        data.rows.map((item : todoInterface) => ({
-        message: item.message,
-        done: item.done,
-        createdAt: item.createdAt,
-        id: item.id,
-        uuid: item.uuid,
-      })))
-    )
-    setCount(data.count);
-
-  }
-
   async function makePostRequest() {
     await axios({
       method: "post",
@@ -124,7 +91,7 @@ export default function Todos() {
         message: input,
       },
     });
-    getTasks();
+    
     setOpen(false);
   }
 
@@ -137,9 +104,9 @@ export default function Todos() {
           task,
         },
       });
-      getTasks();
+      
     } catch (error) {
-      getTasks();
+    
     }
   }
 
@@ -164,10 +131,14 @@ export default function Todos() {
     }
   );
 
-  useEffect(() => {
-    getTasks();
-  }, [currentPage, filter, order]);
 
+  useEffect(()=> {
+    dispatch(getUser(currentPage, filter, order))
+  
+  }, [currentPage, filter, order])
+
+  
+ 
   useEffect(() => {
     try {
       const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
@@ -200,9 +171,11 @@ export default function Todos() {
         setOrder={setOrder}
         setFilter={setFilter}
       />
-
-      <List>
-        {todos.map((todo) => (
+      {user ? 
+      (
+        <div>
+        <List>
+        {user.rows.map((todo: todoInterface) => (
           <Li
             todo={todo}
             handleCheckBoxChecked={handleCheckBoxChecked}
@@ -210,13 +183,17 @@ export default function Todos() {
             handleDelete={handleDelete}
             key={todo.id}
           />
-        ))}
-      </List>
-      {(currentPage === 1) && (count < 6) ? (
-        <div></div>
-      ) : (
-        <Pages changePage={changePage} count={count} />
-      )}
+          
+          ))}
+          </List>
+          {(currentPage === 1) && (user.count < 6) ? (
+            <div></div>
+              ) : (
+          <Pages changePage={changePage} count={count} />
+              )}
+          </div>
+          ) : (<h1>loading</h1>)}
+      
       <Snackbar
         open={open}
         autoHideDuration={5000}
@@ -226,6 +203,8 @@ export default function Todos() {
           {error}
         </Alert>
       </Snackbar>
+      
     </>
+    
   );
 }

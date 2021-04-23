@@ -1,0 +1,2 @@
+when loggen in put user info into resux store
+rewrite requests using createAsyncThunk
