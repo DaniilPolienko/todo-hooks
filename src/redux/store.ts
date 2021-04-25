@@ -1,8 +1,8 @@
 import { create } from 'node:domain'
 import {combineReducers, createStore, applyMiddleware} from 'redux'
 import userReducer from './user'
-import createSagaMiddlewear from 'redux-saga'
-import { watcherSaga } from './sagas/rootSaga.js'
+import createSagaMiddleware from 'redux-saga'
+import  rootSaga from './sagas/rootSaga'
 
 
 
@@ -10,13 +10,13 @@ const reducer = combineReducers({
     user: userReducer
 })
 
-const sagaMiddlewear = createSagaMiddlewear();
+const sagaMiddleware = createSagaMiddleware();
 
-const middlewear= [sagaMiddlewear]
+const middleware= [sagaMiddleware]
 
-const store = createStore(reducer, {}, applyMiddleware(...middlewear))
+const store = createStore(reducer, {}, applyMiddleware(...middleware))
 
-sagaMiddlewear.run(watcherSaga)
+sagaMiddleware.run(rootSaga)
 
 export default store;
 

@@ -1,5 +1,5 @@
 import List from "@material-ui/core/List";
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Input from "./input/Input";
 import Filters from "./filters/Filters";
 import Li from "./listitem/Li";
@@ -7,24 +7,24 @@ import Pages from "./pagination/Pages";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import axios from "axios";
-import { useDispatch, useSelector } from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import Button from "@material-ui/core/Button";
 import "./Styles.css";
-import { Redirect } from "react-router";
-import { getUser, setUser } from "../redux/user";
-import type { RootState, AppDispatch } from '../redux/store'
+import {Redirect} from "react-router";
+import {getTodosRequest, getTodosSuccess} from "../redux/user";
+import type {RootState, AppDispatch} from '../redux/store'
 
 export interface todoInterface {
-    message?: string,
-    done?: boolean,
-    createdAt?: string,
-    id: string,
-    uuid?: string,
+  message?: string,
+  done?: boolean,
+  createdAt?: string,
+  id: string,
+  uuid?: string,
 }
 
-export enum sortEnum{
-    asc = "asc",
-    desc = "desc"
+export enum sortEnum {
+  asc = "asc",
+  desc = "desc"
 }
 
 export default function Todos() {
@@ -33,19 +33,21 @@ export default function Todos() {
   const [filter, setFilter] = useState<boolean | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState("");
   const [order, setOrder] = useState(sortEnum.asc);
   const [count, setCount] = useState(1);
+  const [error, setError] = useState("")
   const [redirect, setRedirect] = useState(false);
   const [name, setName] = useState("");
   const user = useSelector((state: RootState) => state.user.user)
+  const serverError = useSelector((state: RootState) => state.user.error)
+  const loading = useSelector((state: RootState) => state.user.loading)
   const dispatch = useDispatch();
   const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
- 
- 
+
+
   const handleSubmit = () => {
     makePostRequest();
   };
@@ -54,16 +56,16 @@ export default function Todos() {
     await axios({
       method: "delete",
       url: "/item",
-      params: { id },
+      params: {id},
     });
- 
+
   };
 
-  const handleCheckBoxChecked = (e:any, todo: todoInterface) => {
+  const handleCheckBoxChecked = (e: any, todo: todoInterface) => {
     const newTodos = [...todos];
     const currentTodo = newTodos.find((el: todoInterface) => el.id === todo.id);
-    if(currentTodo) {
-        currentTodo.done = e.target.checked;
+    if (currentTodo) {
+      currentTodo.done = e.target.checked;
     }
     editTask(todo);
     setTodos([...newTodos]);
@@ -71,18 +73,19 @@ export default function Todos() {
 
   const handleSubmitCard = (todo: todoInterface) => {
     const newTodos = [...todos];
-    const currentTodo = newTodos.find((el:todoInterface) => el.id === todo.id);
-    if(currentTodo) {
-        currentTodo.message = todo.message;
+    const currentTodo = newTodos.find((el: todoInterface) => el.id === todo.id);
+    if (currentTodo) {
+      currentTodo.message = todo.message;
     }
 
     editTask(todo);
     setTodos([...newTodos]);
   };
 
-  const changePage = (e:any, page: number) => {
+  const changePage = (e: any, page: number) => {
     setCurrentPage(page);
   };
+
   async function makePostRequest() {
     await axios({
       method: "post",
@@ -91,7 +94,7 @@ export default function Todos() {
         message: input,
       },
     });
-    
+
     setOpen(false);
   }
 
@@ -104,41 +107,23 @@ export default function Todos() {
           task,
         },
       });
-      
+
     } catch (error) {
-    
+
     }
   }
 
-  axios.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    (error) => {
-      if (error) {
-        setError(error.response.data.error || error.response.data.errors);
-        setOpen(true);
-        if (
-          error.response.data.error === "jwt expired" ||
-          error.response.data.error === "jwt must be provided" ||
-          error.response.data.error === "Access Denied" ||
-          error.response.data.error === "jwt malformed"
-        ) {
-          setRedirect(true);
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
 
+  useEffect(() => {
+    dispatch(getTodosRequest(currentPage, filter, order))
 
-  useEffect(()=> {
-    dispatch(getUser(currentPage, filter, order))
-  
   }, [currentPage, filter, order])
 
-  
- 
+  useEffect(() => {
+    setError(serverError)
+  }, [serverError])
+
+
   useEffect(() => {
     try {
       const payload = jwt.verify(token, process.env.REACT_APP_SECRET);
@@ -150,7 +135,7 @@ export default function Todos() {
 
   if (redirect) {
     localStorage.removeItem("token");
-    return <Redirect to="/auth" />;
+    return <Redirect to="/auth"/>;
   }
   return (
     <>
@@ -171,29 +156,30 @@ export default function Todos() {
         setOrder={setOrder}
         setFilter={setFilter}
       />
-      {user ? 
+      {user && !loading &&
       (
         <div>
-        <List>
-        {user.rows.map((todo: todoInterface) => (
-          <Li
-            todo={todo}
-            handleCheckBoxChecked={handleCheckBoxChecked}
-            handleSubmitCard={handleSubmitCard}
-            handleDelete={handleDelete}
-            key={todo.id}
-          />
-          
-          ))}
+          <List>
+            {user.rows.map((todo: todoInterface) => (
+              <Li
+                todo={todo}
+                handleCheckBoxChecked={handleCheckBoxChecked}
+                handleSubmitCard={handleSubmitCard}
+                handleDelete={handleDelete}
+                key={todo.id}
+              />
+
+            ))}
           </List>
-          {(currentPage === 1) && (user.count < 6) ? (
-            <div></div>
-              ) : (
-          <Pages changePage={changePage} count={user.count} />
-              )}
-          </div>
-          ) : (<h1>loading</h1>)}
-      
+
+        </div>
+      )}
+      {loading && (<h1>loading</h1>)}
+      {(currentPage === 1) && (user?.count < 6) ? (
+        <div></div>
+      ) : (
+        <Pages changePage={changePage} count={user?.count}/>
+      )}
       <Snackbar
         open={open}
         autoHideDuration={5000}
@@ -203,8 +189,8 @@ export default function Todos() {
           {error}
         </Alert>
       </Snackbar>
-      
+
     </>
-    
+
   );
 }
