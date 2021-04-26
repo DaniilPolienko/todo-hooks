@@ -10,6 +10,10 @@ export const DELETE_TODO_REQUEST = 'DELETE_TODO_REQUEST'
 export const DELETE_TODO_SUCCESS = 'DELETE_TODO_SUCCESS'
 export const DELETE_TODO_ERROR = 'DELETE_TODO_ERROR'
 
+export const POST_TODO_REQUEST = 'POST_TODO_REQUEST'
+export const POST_TODO_SUCCESS = 'POST_TODO_SUCCESS'
+export const POST_TODO_ERROR = 'POST_TODO_ERROR'
+
 export interface interfaceUser {
     firstname: string,
     lastname: string,
@@ -70,17 +74,28 @@ export const deleteTodoError = (error: any) => ({
     }
 })
 
+export const postTodoRequest = (message: string) => ({
+    type: POST_TODO_REQUEST,
+    payload : {
+        message
+    }
+})
+
+export const postTodoSuccess = (todo: interfaceTodo) => ({
+    type: POST_TODO_SUCCESS,
+    payload : {
+        todo
+    }
+})
+
+export const postTodoError = (error: any) => ({
+    type: POST_TODO_SUCCESS,
+    payload : {
+        error
+    }
+})
 
 
-
-// const initialState = {
-//     user: {
-//         rows: [],
-//         loading: false,
-//         error: null
-//     },
-    
-// }
 export interface ITodo {
     loading: boolean;
     error: string;
@@ -122,6 +137,14 @@ export default (state = initialState, action: ReduxAction )=> {
             return {...state, user: { ...state?.user, rows: todos},  loading: false}
         case DELETE_TODO_ERROR:
             return {...state, error: action.payload.error, loading: false}
+        case POST_TODO_REQUEST:
+            return {...state, loading: true}
+        case POST_TODO_SUCCESS:
+            const postTodos = state.user?.rows
+            postTodos?.push(action.payload.todo)
+            return {...state, user: { ...state?.user, rows: postTodos}, loading: false}
+        case POST_TODO_ERROR:
+            return {...state, loading: false}
         default:
             return state;
     }

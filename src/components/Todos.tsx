@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import Button from "@material-ui/core/Button";
 import "./Styles.css";
 import {Redirect} from "react-router";
-import {deleteTodoRequest, getTodosRequest, getTodosSuccess, IState} from "../redux/user";
+import {deleteTodoRequest, getTodosRequest, getTodosSuccess, IState, postTodoRequest} from "../redux/user";
 import type {RootState, AppDispatch} from '../redux/store'
 
 export interface todoInterface {
@@ -46,11 +46,9 @@ export default function Todos() {
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
-  console.log('loading', loading);
-  console.log('error', serverError)
   
   const handleSubmit = () => {
-    makePostRequest();
+    dispatch(postTodoRequest(input))
   };
 
   const handleDelete = async (id: string) => {
@@ -82,18 +80,6 @@ export default function Todos() {
     setCurrentPage(page);
   };
 
-  async function makePostRequest() {
-    await axios({
-      method: "post",
-      url: "/item",
-      data: {
-        message: input,
-      },
-    });
-
-    setOpen(false);
-  }
-
   async function editTask(task: todoInterface) {
     try {
       await axios({
@@ -112,7 +98,6 @@ export default function Todos() {
 
   useEffect(() => {
     dispatch(getTodosRequest(currentPage, filter, order))
-
   }, [currentPage, filter, order])
 
   useEffect(() => {
