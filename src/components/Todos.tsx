@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import Button from "@material-ui/core/Button";
 import "./Styles.css";
 import {Redirect} from "react-router";
-import {getTodosRequest, getTodosSuccess} from "../redux/user";
+import {deleteTodoRequest, getTodosRequest, getTodosSuccess, IState} from "../redux/user";
 import type {RootState, AppDispatch} from '../redux/store'
 
 export interface todoInterface {
@@ -38,27 +38,23 @@ export default function Todos() {
   const [error, setError] = useState("")
   const [redirect, setRedirect] = useState(false);
   const [name, setName] = useState("");
-  const user = useSelector((state: RootState) => state.user.user)
-  const serverError = useSelector((state: RootState) => state.user.error)
-  const loading = useSelector((state: RootState) => state.user.loading)
+  const user = useSelector((state: RootState) => state?.user)
+  const serverError = useSelector((state: RootState) => state?.user.error)
+  const loading = useSelector((state: RootState) => state?.user.loading)
   const dispatch = useDispatch();
   const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
-
-
+  console.log('loading', loading);
+  console.log('error', serverError)
+  
   const handleSubmit = () => {
     makePostRequest();
   };
 
   const handleDelete = async (id: string) => {
-    await axios({
-      method: "delete",
-      url: "/item",
-      params: {id},
-    });
-
+    await dispatch(deleteTodoRequest(id))
   };
 
   const handleCheckBoxChecked = (e: any, todo: todoInterface) => {
@@ -120,7 +116,7 @@ export default function Todos() {
   }, [currentPage, filter, order])
 
   useEffect(() => {
-    setError(serverError)
+    setError(serverError ? serverError: '')
   }, [serverError])
 
 
@@ -160,7 +156,7 @@ export default function Todos() {
       (
         <div>
           <List>
-            {user.rows.map((todo: todoInterface) => (
+            {user?.user?.rows?.map((todo: todoInterface) => (
               <Li
                 todo={todo}
                 handleCheckBoxChecked={handleCheckBoxChecked}
@@ -175,10 +171,10 @@ export default function Todos() {
         </div>
       )}
       {loading && (<h1>loading</h1>)}
-      {(currentPage === 1) && (user?.count < 6) ? (
+      {(currentPage === 1) && (user && user?.user?.count < 6) ? (
         <div></div>
       ) : (
-        <Pages changePage={changePage} count={user?.count}/>
+        <Pages changePage={changePage} count={user?.user?.count}/>
       )}
       <Snackbar
         open={open}

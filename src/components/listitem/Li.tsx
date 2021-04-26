@@ -9,13 +9,13 @@ import "./listitem.css";
 import { todoInterface } from "../Todos";
 
 
-interface Props { 
+interface LiProps { 
     todo: todoInterface
     handleSubmitCard: (task:todoInterface) => void
     handleDelete:(id: string) => void
     handleCheckBoxChecked: (e: React.ChangeEvent<HTMLInputElement>, task: todoInterface ) => void
 }
-export default function Li({todo, handleSubmitCard, handleDelete, handleCheckBoxChecked}:Props) {
+export default function Li({todo, handleSubmitCard, handleDelete, handleCheckBoxChecked}:LiProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEditInputChange = (e: any) => {
