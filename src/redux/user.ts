@@ -14,6 +14,10 @@ export const POST_TODO_REQUEST = 'POST_TODO_REQUEST'
 export const POST_TODO_SUCCESS = 'POST_TODO_SUCCESS'
 export const POST_TODO_ERROR = 'POST_TODO_ERROR'
 
+export const EDIT_TODO_REQUEST = 'EDIT_TODO_REQUEST'
+export const EDIT_TODO_SUCCESS = 'EDIT_TODO_SUCCESS'
+export const EDIT_TODO_ERROR = 'EDIT_TODO_ERROR'
+
 export interface interfaceUser {
     firstname: string,
     lastname: string,
@@ -21,12 +25,12 @@ export interface interfaceUser {
   }
 
 export interface interfaceTodo {
-    createdAt: string,
-    done: boolean
+    createdAt?: string,
+    done?: boolean
     id: string,
-    message: string,
-    updatedAt: string,
-    uuid: string
+    message?: string,
+    updatedAt?: string,
+    uuid?: string
 }
 
 export const getTodosRequest = (currentPage: number, filter: boolean | null, order: string) => ({
@@ -95,6 +99,26 @@ export const postTodoError = (error: any) => ({
     }
 })
 
+export const editTodoRequest = (todo: interfaceTodo) => ({
+    type: EDIT_TODO_REQUEST,
+    payload : {
+        todo
+    }
+})
+
+export const editTodoSuccess = (todo: interfaceTodo) => ({
+    type: EDIT_TODO_SUCCESS,
+    payload : {
+        todo
+    }
+})
+
+export const editTodoError = (error: any) => ({
+    type: EDIT_TODO_ERROR,
+    payload : {
+        error
+    }
+})
 
 export interface ITodo {
     loading: boolean;
@@ -145,6 +169,15 @@ export default (state = initialState, action: ReduxAction )=> {
             return {...state, user: { ...state?.user, rows: postTodos}, loading: false}
         case POST_TODO_ERROR:
             return {...state, loading: false}
+        case EDIT_TODO_REQUEST:
+            return {...state, loading: true}
+        case EDIT_TODO_SUCCESS:
+            const editTodo = action.payload;
+            // eslint-disable-next-line no-self-assign
+            const editTodos = state.user?.rows.map(el => el.id === editTodo.todo.id ? el = editTodo.todo : el = el)
+            return {...state, user: {...state?.user, rows: editTodos}, loading: false}
+        case EDIT_TODO_ERROR:
+            return {...state, error: action.payload.error, loading: false}
         default:
             return state;
     }

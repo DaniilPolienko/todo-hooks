@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import Button from "@material-ui/core/Button";
 import "./Styles.css";
 import {Redirect} from "react-router";
-import {deleteTodoRequest, getTodosRequest, getTodosSuccess, IState, postTodoRequest} from "../redux/user";
+import {deleteTodoRequest, editTodoRequest, getTodosRequest, getTodosSuccess, IState, postTodoRequest} from "../redux/user";
 import type {RootState, AppDispatch} from '../redux/store'
 
 export interface todoInterface {
@@ -20,6 +20,7 @@ export interface todoInterface {
   createdAt?: string,
   id: string,
   uuid?: string,
+  updatedAt?: string,
 }
 
 export enum sortEnum {
@@ -34,7 +35,6 @@ export default function Todos() {
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [order, setOrder] = useState(sortEnum.asc);
-  const [count, setCount] = useState(1);
   const [error, setError] = useState("")
   const [redirect, setRedirect] = useState(false);
   const [name, setName] = useState("");
@@ -52,7 +52,7 @@ export default function Todos() {
   };
 
   const handleDelete = async (id: string) => {
-    await dispatch(deleteTodoRequest(id))
+    dispatch(deleteTodoRequest(id))
   };
 
   const handleCheckBoxChecked = (e: any, todo: todoInterface) => {
@@ -61,7 +61,7 @@ export default function Todos() {
     if (currentTodo) {
       currentTodo.done = e.target.checked;
     }
-    editTask(todo);
+    dispatch(editTodoRequest(todo));
     setTodos([...newTodos]);
   };
 
@@ -72,7 +72,7 @@ export default function Todos() {
       currentTodo.message = todo.message;
     }
 
-    editTask(todo);
+    dispatch(editTodoRequest(todo));
     setTodos([...newTodos]);
   };
 
@@ -80,20 +80,7 @@ export default function Todos() {
     setCurrentPage(page);
   };
 
-  async function editTask(task: todoInterface) {
-    try {
-      await axios({
-        method: "patch",
-        url: "/item",
-        data: {
-          task,
-        },
-      });
 
-    } catch (error) {
-
-    }
-  }
 
 
   useEffect(() => {
