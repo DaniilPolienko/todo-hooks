@@ -56,8 +56,8 @@ export default function Todos() {
   };
 
   const handleDelete = async (id: string) => {
-    console.log(id)
-    dispatch(deleteTodoRequest(id))
+    await dispatch(deleteTodoRequest(id))
+    dispatch(getTodosRequest(currentPage, filter, order))
   };
 
   const handleCheckBoxChecked = (e: any, todo: todoInterface) => {
