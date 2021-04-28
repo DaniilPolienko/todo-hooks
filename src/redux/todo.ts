@@ -45,10 +45,10 @@ export const getTodosRequest = (currentPage: number, filter: boolean | null, ord
 
 })
 
-export const getTodosSuccess = (user: interfaceTodo) => ({
+export const getTodosSuccess = (todo: interfaceTodo) => ({
     type: GET_TODOS_SUCCESS,
     payload: {
-        user
+        todo
     }
 })
 
@@ -129,23 +129,23 @@ export const resetAction = () => ({
 export interface ITodo {
     loading: boolean;
     error: {message: string} | null;
-    user: IUser;
+    todo: InterfaceTodo;
 }
 
-export interface IUser {
+export interface InterfaceTodo {
     count: number;
     rows: todoInterface[]
     pages: number
 }
 
 export interface IState {
-    user: IUser | null;
+    todo: InterfaceTodo | null;
     loading: boolean;
     error: {message: string} | null;
 }
 
 const initialState: IState = {
-    user: null,
+    todo: null,
     loading: false,
     error: null
 }
@@ -156,35 +156,35 @@ export default (state = initialState, action: ReduxAction )=> {
         case GET_TODOS_REQUEST:
             return {...state, loading: true}
         case GET_TODOS_SUCCESS:
-            const {user} = action.payload;
+            const {todo} = action.payload;
             let getPages = 0;
-            console.log(user)
-            getPages = Math.ceil(user.count / 5)
-            return {...state, user : {...user, pages: getPages}, loading: false}
+            console.log(todo)
+            getPages = Math.ceil(todo.count / 5)
+            return {...state, todo : {...todo, pages: getPages}, loading: false}
         case GET_TODOS_ERROR:
             return {...state, error: action.payload.error, loading: false}
         case DELETE_TODO_REQUEST:
             return {...state, loading: true}
         case DELETE_TODO_SUCCESS:
-            const {todo} = action.payload;
-            const todos = {...state}?.user?.rows?.filter(el => el.id !== todo.id);
-            return {...state, user: { ...state?.user, rows: todos},  loading: false}
+            const deleteTodo = action.payload?.todo;
+            const todos = {...state}?.todo?.rows?.filter(el => el.id !== deleteTodo.id);
+            return {...state, todo: { ...state?.todo, rows: todos},  loading: false}
         case DELETE_TODO_ERROR:
             return {...state, error: action.payload.error, loading: false}
         case POST_TODO_REQUEST:
             return {...state, loading: true}
         case POST_TODO_SUCCESS:
             let pages = 1
-            const postTodos = state.user?.rows
-            if (state && state.user) {
-                pages = Math.ceil(state?.user?.count / 5)
+            const postTodos = state.todo?.rows
+            if (state && state.todo) {
+                pages = Math.ceil(state?.todo?.count / 5)
             }
             console.log(pages)
             console.log('!!!', state)
             if (postTodos?.length === 5) 
-            return {...state,  user: { ...state?.user, rows: postTodos, pages: pages + 1 }, loading: false}
+            return {...state,  todo: { ...state?.todo, rows: postTodos, pages: pages + 1 }, loading: false}
             postTodos?.push(action.payload.todo)
-            return {...state, user: { ...state?.user, rows: postTodos, pages: pages}, loading: false}
+            return {...state, todo: { ...state?.todo, rows: postTodos, pages: pages}, loading: false}
         case POST_TODO_ERROR:
             return {...state, loading: false}
         case EDIT_TODO_REQUEST:
@@ -192,8 +192,8 @@ export default (state = initialState, action: ReduxAction )=> {
         case EDIT_TODO_SUCCESS:
             const editTodo = action.payload;
             // eslint-disable-next-line no-self-assign
-            const editTodos = state.user?.rows.map(el => el.id === editTodo.todo.id ? el = editTodo.todo : el = el)
-            return {...state, user: {...state?.user, rows: editTodos}, loading: false}
+            const editTodos = state.todo?.rows.map(el => el.id === editTodo.todo.id ? el = editTodo.todo : el = el)
+            return {...state, todo: {...state?.todo, rows: editTodos}, loading: false}
         case EDIT_TODO_ERROR:
             return {...state, error: action.payload.error, loading: false}
         case RESET:

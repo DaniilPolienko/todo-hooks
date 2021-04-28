@@ -11,8 +11,7 @@ interface Props {
 
 }
 export default function Pages({ changePage, count }: Props) {
-  const pageAmount = useSelector((state: RootState) => state?.user?.user?.pages)
-  console.log(pageAmount)
+  const pageAmount = useSelector((state: RootState) => state?.todo?.todo?.pages)
   return (
     <Pagination
       onChange={changePage}

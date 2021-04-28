@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import Button from "@material-ui/core/Button";
 import "./Styles.css";
 import {Redirect} from "react-router";
-import {deleteTodoRequest, editTodoRequest, getTodosRequest, getTodosSuccess, IState, postTodoRequest, resetAction} from "../redux/user";
+import {deleteTodoRequest, editTodoRequest, getTodosRequest, getTodosSuccess, InterfaceTodo, postTodoRequest, resetAction} from "../redux/todo";
 import type {RootState, AppDispatch} from '../redux/store'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -39,17 +39,16 @@ export default function Todos() {
   const [error, setError] = useState("")
   const [redirect, setRedirect] = useState(false);
   const [name, setName] = useState("");
-  const user = useSelector((state: RootState) => state?.user)
-  const serverError = useSelector((state: RootState) => state?.user.error)
-  const loading = useSelector((state: RootState) => state?.user.loading)
+  const todo = useSelector((state: RootState) => state?.todo)
+  const serverError = useSelector((state: RootState) => state?.todo.error)
+  const loading = useSelector((state: RootState) => state?.todo.loading)
   const dispatch = useDispatch();
   const jwt = require("jsonwebtoken");
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
-  console.log(user)
   const handleSubmit = () => {
-    if (user?.user?.rows?.find(el => el.message === input))
+    if (todo?.todo?.rows?.find(el => el.message === input))
       setError("Task already exists")
     else {
       dispatch(postTodoRequest(input))
@@ -57,6 +56,7 @@ export default function Todos() {
   };
 
   const handleDelete = async (id: string) => {
+    console.log(id)
     dispatch(deleteTodoRequest(id))
   };
 
@@ -145,11 +145,11 @@ export default function Todos() {
         setOrder={setOrder}
         setFilter={setFilter}
       />
-      {user && !loading && !error &&
+      {todo && !loading && !error &&
       (
         <div>
           <List>
-            {user?.user?.rows?.map((todo: todoInterface) => (
+            {todo?.todo?.rows?.map((todo: todoInterface) => (
               <Li
                 todo={todo}
                 handleCheckBoxChecked={handleCheckBoxChecked}
@@ -164,10 +164,10 @@ export default function Todos() {
         </div>
       )}
       {loading && (<CircularProgress />)}
-      {(currentPage === 1) && (user && user?.user?.count < 6) && (user?.user?.pages !== 2) ? (
+      {(currentPage === 1) && (todo && todo?.todo?.count < 6) && (todo?.todo?.pages !== 2) ? (
         <div></div>
       ) : (
-        <Pages changePage={changePage} count={user?.user?.count}/>
+        <Pages changePage={changePage} count={todo?.todo?.count}/>
       )}
       <Snackbar
         open={open}

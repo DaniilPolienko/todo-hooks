@@ -1,6 +1,6 @@
 import { create } from 'node:domain'
 import {combineReducers, createStore, applyMiddleware} from 'redux'
-import userReducer, { ITodo, IUser } from './user'
+import userReducer, { InterfaceTodo, ITodo } from './todo'
 import createSagaMiddleware from 'redux-saga'
 import  rootSaga from './sagas/rootSaga'
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -8,7 +8,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 
 const reducer = combineReducers({
-    user: userReducer
+    todo: userReducer
 })
 
 const sagaMiddleware = createSagaMiddleware();
@@ -23,7 +23,7 @@ export default store;
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = {
-    user: ITodo;
+    todo: ITodo;
     loading: boolean;
     error: null | {message: string};
 }
