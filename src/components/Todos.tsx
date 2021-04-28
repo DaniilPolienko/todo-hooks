@@ -98,6 +98,7 @@ export default function Todos() {
           error.response.data.error === "Access Denied" ||
           error.response.data.error === "jwt malformed"
         ) {
+          dispatch(resetAction())
           setRedirect(true);
         }
       }
