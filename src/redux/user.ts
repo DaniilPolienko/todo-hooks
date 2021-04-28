@@ -18,6 +18,8 @@ export const EDIT_TODO_REQUEST = 'EDIT_TODO_REQUEST'
 export const EDIT_TODO_SUCCESS = 'EDIT_TODO_SUCCESS'
 export const EDIT_TODO_ERROR = 'EDIT_TODO_ERROR'
 
+export const RESET = 'RESET'
+
 export interface interfaceUser {
     firstname: string,
     lastname: string,
@@ -120,9 +122,13 @@ export const editTodoError = (error: any) => ({
     }
 })
 
+export const resetAction = () => ({
+    type: 'RESET'
+})
+
 export interface ITodo {
     loading: boolean;
-    error: string;
+    error: {message: string} | null;
     user: IUser;
 }
 
@@ -134,7 +140,7 @@ export interface IUser {
 export interface IState {
     user: IUser | null;
     loading: boolean;
-    error: string | null;
+    error: {message: string} | null;
 }
 
 const initialState: IState = {
@@ -178,6 +184,8 @@ export default (state = initialState, action: ReduxAction )=> {
             return {...state, user: {...state?.user, rows: editTodos}, loading: false}
         case EDIT_TODO_ERROR:
             return {...state, error: action.payload.error, loading: false}
+        case RESET:
+            return {...initialState}
         default:
             return state;
     }

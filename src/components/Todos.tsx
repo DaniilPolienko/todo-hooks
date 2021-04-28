@@ -11,8 +11,9 @@ import {useDispatch, useSelector} from 'react-redux'
 import Button from "@material-ui/core/Button";
 import "./Styles.css";
 import {Redirect} from "react-router";
-import {deleteTodoRequest, editTodoRequest, getTodosRequest, getTodosSuccess, IState, postTodoRequest} from "../redux/user";
+import {deleteTodoRequest, editTodoRequest, getTodosRequest, getTodosSuccess, IState, postTodoRequest, resetAction} from "../redux/user";
 import type {RootState, AppDispatch} from '../redux/store'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export interface todoInterface {
   message?: string,
@@ -46,9 +47,12 @@ export default function Todos() {
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
-  
   const handleSubmit = () => {
-    dispatch(postTodoRequest(input))
+    if (user?.user?.rows?.find(el => el.message === input))
+      setError("Task already exists")
+    else {
+      dispatch(postTodoRequest(input))
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -80,17 +84,30 @@ export default function Todos() {
     setCurrentPage(page);
   };
 
-
-
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error) {
+        setError(error.response.data.error || error.response.data.errors);
+        setOpen(true);
+        if (
+          error.response.data.error === "jwt expired" ||
+          error.response.data.error === "jwt must be provided" ||
+          error.response.data.error === "Access Denied" ||
+          error.response.data.error === "jwt malformed"
+        ) {
+          setRedirect(true);
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
 
   useEffect(() => {
     dispatch(getTodosRequest(currentPage, filter, order))
   }, [currentPage, filter, order])
-
-  useEffect(() => {
-    setError(serverError ? serverError: '')
-  }, [serverError])
-
 
   useEffect(() => {
     try {
@@ -124,7 +141,7 @@ export default function Todos() {
         setOrder={setOrder}
         setFilter={setFilter}
       />
-      {user && !loading &&
+      {user && !loading && !error &&
       (
         <div>
           <List>
@@ -142,7 +159,7 @@ export default function Todos() {
 
         </div>
       )}
-      {loading && (<h1>loading</h1>)}
+      {loading && (<CircularProgress />)}
       {(currentPage === 1) && (user && user?.user?.count < 6) ? (
         <div></div>
       ) : (
@@ -157,7 +174,7 @@ export default function Todos() {
           {error}
         </Alert>
       </Snackbar>
-
+      
     </>
 
   );

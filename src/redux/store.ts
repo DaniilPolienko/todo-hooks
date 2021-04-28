@@ -25,7 +25,7 @@ export default store;
 export type RootState = {
     user: ITodo;
     loading: boolean;
-    error: string | null;
+    error: null | {message: string};
 }
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch
