@@ -164,7 +164,7 @@ export default function Todos() {
         </div>
       )}
       {loading && (<CircularProgress />)}
-      {(currentPage === 1) && (user?.user?.pages !== 2) ? (
+      {(currentPage === 1) && (user && user?.user?.count < 6) && (user?.user?.pages !== 2) ? (
         <div></div>
       ) : (
         <Pages changePage={changePage} count={user?.user?.count}/>
