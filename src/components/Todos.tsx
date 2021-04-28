@@ -47,6 +47,7 @@ export default function Todos() {
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
+  console.log(user)
   const handleSubmit = () => {
     if (user?.user?.rows?.find(el => el.message === input))
       setError("Task already exists")

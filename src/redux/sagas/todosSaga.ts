@@ -19,7 +19,6 @@ function* handleGetUser(action: ReduxAction): SagaIterator {
             }
         );
         const {data} = response;
-        console.log(data)
         yield put(getTodosSuccess(data));
     } catch (error) {
         yield put(getTodosError(error))

@@ -135,6 +135,7 @@ export interface ITodo {
 export interface IUser {
     count: number;
     rows: todoInterface[]
+    pages: number
 }
 
 export interface IState {
@@ -156,7 +157,10 @@ export default (state = initialState, action: ReduxAction )=> {
             return {...state, loading: true}
         case GET_TODOS_SUCCESS:
             const {user} = action.payload;
-            return {...state, user, loading: false}
+            let getPages = 0;
+            console.log(user)
+            getPages = Math.ceil(user.count / 5)
+            return {...state, user : {...user, pages: getPages}, loading: false}
         case GET_TODOS_ERROR:
             return {...state, error: action.payload.error, loading: false}
         case DELETE_TODO_REQUEST:
@@ -170,9 +174,17 @@ export default (state = initialState, action: ReduxAction )=> {
         case POST_TODO_REQUEST:
             return {...state, loading: true}
         case POST_TODO_SUCCESS:
+            let pages = 0
             const postTodos = state.user?.rows
+            if (state && state.user) {
+                pages = Math.ceil(state?.user?.count / 5)
+            }
+            console.log(pages)
+            console.log('!!!', state)
+            if (postTodos?.length === 5) 
+            return {...state,  user: { ...state?.user, rows: postTodos, pages: pages + 1 }, loading: false}
             postTodos?.push(action.payload.todo)
-            return {...state, user: { ...state?.user, rows: postTodos}, loading: false}
+            return {...state, user: { ...state?.user, rows: postTodos, pages: pages}, loading: false}
         case POST_TODO_ERROR:
             return {...state, loading: false}
         case EDIT_TODO_REQUEST:

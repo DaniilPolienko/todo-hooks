@@ -1,6 +1,9 @@
 import Pagination from "@material-ui/lab/Pagination";
 import React from "react";
 import "./pages.css";
+import type {RootState, AppDispatch} from '../../redux/store'
+import {useDispatch, useSelector} from 'react-redux'
+
 
 interface Props { 
     changePage: (e: any, page: number) => void
@@ -8,11 +11,13 @@ interface Props {
 
 }
 export default function Pages({ changePage, count }: Props) {
+  const pageAmount = useSelector((state: RootState) => state?.user?.user?.pages)
+  console.log(pageAmount)
   return (
     <Pagination
       onChange={changePage}
       className="pages"
-      count={Math.ceil(count / 5)}
+      count={pageAmount}
       color="primary"
     />
   );
