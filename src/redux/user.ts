@@ -174,7 +174,7 @@ export default (state = initialState, action: ReduxAction )=> {
         case POST_TODO_REQUEST:
             return {...state, loading: true}
         case POST_TODO_SUCCESS:
-            let pages = 0
+            let pages = 1
             const postTodos = state.user?.rows
             if (state && state.user) {
                 pages = Math.ceil(state?.user?.count / 5)

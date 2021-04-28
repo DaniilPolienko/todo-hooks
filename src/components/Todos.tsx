@@ -67,6 +67,7 @@ export default function Todos() {
       currentTodo.done = e.target.checked;
     }
     dispatch(editTodoRequest(todo));
+    dispatch(getTodosRequest(currentPage, filter, order))
     setTodos([...newTodos]);
   };
 
@@ -78,6 +79,7 @@ export default function Todos() {
     }
 
     dispatch(editTodoRequest(todo));
+    
     setTodos([...newTodos]);
   };
 
@@ -162,7 +164,7 @@ export default function Todos() {
         </div>
       )}
       {loading && (<CircularProgress />)}
-      {(currentPage === 1) && (user && user?.user?.count < 6) ? (
+      {(currentPage === 1) && (user?.user?.pages !== 2) ? (
         <div></div>
       ) : (
         <Pages changePage={changePage} count={user?.user?.count}/>
