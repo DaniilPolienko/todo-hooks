@@ -21,7 +21,7 @@ function* handleGetUser(action: ReduxAction): SagaIterator {
         const {data} = response;
         yield put(getTodosSuccess(data));
     } catch (error) {
-        yield put(getTodosError(error))
+        yield put(getTodosError(error.message))
     }
 }
 
@@ -36,7 +36,6 @@ function* handleDeleteTodo(action: ReduxAction): SagaIterator {
                 }
             }
         );
-        console.log(response.data)
         yield put(deleteTodoSuccess(response.data))
     } catch (error) {
         yield put(deleteTodoError(error))
@@ -55,15 +54,13 @@ function* handleDeleteTodo(action: ReduxAction): SagaIterator {
                 },
             }
         );
-        console.log(response.data)
         yield put(postTodoSuccess(response.data))
     } catch (error) {
-        yield put(postTodoError(error))
+        yield put(postTodoError(error.message))
     }
 }
 
   function* handleEditTodo(action: ReduxAction): SagaIterator {
-    console.log(action)
     try {
         const response = yield call(
             fetcher, {
@@ -74,7 +71,6 @@ function* handleDeleteTodo(action: ReduxAction): SagaIterator {
                 },
             }
         );
-        console.log(response.data[1][0])
         yield put(editTodoSuccess(response.data[1][0]))
     } catch (error) {
         yield put(editTodoError(error))

@@ -14,6 +14,7 @@ import {Redirect} from "react-router";
 import {deleteTodoRequest, editTodoRequest, getTodosRequest, getTodosSuccess, InterfaceTodo, postTodoRequest, resetAction} from "../redux/todo";
 import type {RootState, AppDispatch} from '../redux/store'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { CollectionsBookmarkRounded } from "@material-ui/icons";
 
 export interface todoInterface {
   message?: string,
@@ -47,12 +48,10 @@ export default function Todos() {
   const token = localStorage.getItem("token");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   axios.defaults.headers.common["Authorization"] = token;
-  const handleSubmit = () => {
-    if (todo?.todo?.rows?.find(el => el.message === input))
-      setError("Task already exists")
-    else {
-      dispatch(postTodoRequest(input))
-    }
+  const handleSubmit = async () => {
+      await dispatch(postTodoRequest(input))
+      dispatch(getTodosRequest(currentPage, filter, order))
+
   };
 
   const handleDelete = async (id: string) => {
@@ -93,6 +92,7 @@ export default function Todos() {
     },
     (error) => {
       if (error) {
+
         setError(error.response.data.error || error.response.data.errors);
         setOpen(true);
         if (
@@ -145,7 +145,7 @@ export default function Todos() {
         setOrder={setOrder}
         setFilter={setFilter}
       />
-      {todo && !loading && !error &&
+      {todo && !loading &&
       (
         <div>
           <List>

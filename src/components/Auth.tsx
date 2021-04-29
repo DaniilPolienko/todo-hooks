@@ -11,6 +11,8 @@ import axios from "axios";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import { Dispatch, SetStateAction } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -43,6 +45,7 @@ export default function SignIn() {
   const [error, setError] = useState<string | null>();
   const [open, setOpen] = useState<boolean>(false);
   const [redirectToSignUp, setRedirectToSignUp] = useState<boolean>(false);
+  const serverError = useSelector((state: RootState) => state)
   const jwt = require("jsonwebtoken");
   axios.defaults.baseURL = process.env.REACT_APP_API;
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, setInput: Dispatch<SetStateAction<string>> ) => {

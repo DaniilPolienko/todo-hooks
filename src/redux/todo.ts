@@ -95,7 +95,7 @@ export const postTodoSuccess = (todo: interfaceTodo) => ({
 })
 
 export const postTodoError = (error: any) => ({
-    type: POST_TODO_SUCCESS,
+    type: POST_TODO_ERROR,
     payload : {
         error
     }
@@ -158,7 +158,6 @@ export default (state = initialState, action: ReduxAction )=> {
         case GET_TODOS_SUCCESS:
             const {todo} = action.payload;
             let getPages = 0;
-            console.log(todo)
             getPages = Math.ceil(todo.count / 5)
             return {...state, todo : {...todo, pages: getPages}, loading: false}
         case GET_TODOS_ERROR:
@@ -178,15 +177,21 @@ export default (state = initialState, action: ReduxAction )=> {
             const postTodos = state.todo?.rows
             if (state && state.todo) {
                 pages = Math.ceil(state?.todo?.count / 5)
+                if (postTodos?.length === 5 && state?.todo?.count % 5 === 0) 
+                return {...state,  todo: { ...state?.todo, rows: postTodos, pages: pages + 1 }, loading: false}
+                if (postTodos?.length === 5 && state?.todo?.count % 5 !== 0)
+                return {...state,  todo: { ...state?.todo, rows: postTodos, pages: pages }, loading: false}
             }
-            console.log(pages)
-            console.log('!!!', state)
-            if (postTodos?.length === 5) 
-            return {...state,  todo: { ...state?.todo, rows: postTodos, pages: pages + 1 }, loading: false}
             postTodos?.push(action.payload.todo)
             return {...state, todo: { ...state?.todo, rows: postTodos, pages: pages}, loading: false}
+          
         case POST_TODO_ERROR:
-            return {...state, loading: false}
+            let errorPages = 1
+            const errorTodos = state.todo?.rows
+            if (state && state.todo) {
+                errorPages = Math.ceil(state?.todo?.count / 5)
+            }
+            return {...state, error: action.payload.error, todo: { ...state?.todo, rows: errorTodos, pages: errorPages}, loading: false}
         case EDIT_TODO_REQUEST:
             return {...state, loading: true}
         case EDIT_TODO_SUCCESS:
