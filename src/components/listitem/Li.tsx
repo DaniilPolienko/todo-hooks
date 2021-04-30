@@ -32,7 +32,7 @@ export default function Li({todo, handleSubmitCard, handleDelete, handleCheckBox
   };
 
   return (
-    <ListItem className="listitem" divider>
+    <ListItem className="listitem" divider > 
       <Checkbox
         checked={todo.done}
         onChange={(e) =>
